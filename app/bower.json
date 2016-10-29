@@ -1,0 +1,21 @@
+{
+  "name": "app",
+  "authors": [
+    "Tomasz Jagla <tjagla32@gmail.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.1.1",
+    "skeleton": "^2.0.4"
+  }
+}
