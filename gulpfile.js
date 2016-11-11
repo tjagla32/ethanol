@@ -4,10 +4,16 @@ var gulp = require('gulp'),
     uglifyCss = require('gulp-uglifycss'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
-    concatCss = require('gulp-concat-css');
+    concatCss = require('gulp-concat-css'),
+    replace = require('gulp-replace');
 
 gulp.task('scripts', function(){
-  gulp.src(['app/js/**/*.js', '!app/js/**/main*'])
+  gulp.src(['app/bower_components/jquery/dist/jquery.min.js',
+            '//code.jquery.com/jquery-migrate-1.2.1.min.js',/*---slick slider---*/
+            'app/bower_components/slick-carousel/slick/slick.min.js',
+            'app/bower_components/shufflejs/dist/shuffle.js',
+            'app/js/**/*.js',
+            '!app/js/**/main*'])
   .pipe(concat('main.js'))
   .pipe(gulp.dest('app/js'))
   .pipe(uglify())
@@ -16,9 +22,15 @@ gulp.task('scripts', function(){
 });
 
 gulp.task('style', function(){
-  gulp.src(['app/scss/**/*.scss'])
+  gulp.src(['app/bower_components/skeleton/css/skeleton.css',
+            'app/bower_components/font-awesome/scss/font-awesome.scss',
+            'app/bower_components/slick-carousel/slick/slick.css',
+            'app/bower_components/slick-carousel/slick/slick-theme.css',
+            'app/scss/**/*.scss'])
   .pipe(sass().on('error', sass.logError))
   .pipe(concatCss('style.css'))
+  .pipe(replace('../../', ''))  //nadpisuje ściezki - nie wiem czemu :/
+  .pipe(replace('font-awesome/bower_components', '../bower_components'))
   .pipe(gulp.dest('app/css'))
   .pipe(uglifyCss())
   .pipe(rename({suffix: '.min'}))

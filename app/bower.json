@@ -16,6 +16,9 @@
   ],
   "dependencies": {
     "jquery": "^3.1.1",
-    "skeleton": "^2.0.4"
+    "skeleton": "^2.0.4",
+    "font-awesome": "^4.7.0",
+    "slick-carousel": "slick.js#^1.6.0",
+    "shufflejs": "^4.0.2"
   }
 }

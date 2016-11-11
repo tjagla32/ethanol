@@ -1,2 +1,6 @@
+@import 'helpers/variables';
+@import 'helpers/mixins';
+@import 'helpers/functions';
+//////////////////////////
+@import 'layout/basics';
 @import 'layout/header';
-@import 'layout/footer';
