@@ -5,7 +5,8 @@ var gulp = require('gulp'),
     rename = require('gulp-rename'),
     concat = require('gulp-concat'),
     concatCss = require('gulp-concat-css'),
-    replace = require('gulp-replace');
+    replace = require('gulp-replace'),
+    htmlmin = require('gulp-htmlmin');
 
 gulp.task('scripts', function(){
   gulp.src(['app/bower_components/jquery/dist/jquery.min.js',
@@ -39,9 +40,17 @@ gulp.task('style', function(){
   .pipe(gulp.dest('app/css'));
 });
 
+gulp.task('minify', function() {
+  return gulp.src('app/*.html')
+    .pipe(htmlmin({collapseWhitespace: true}))
+    .pipe(rename('index.min.html'))
+    .pipe(gulp.dest('app'));
+});
+
 gulp.task('watch', function(){
   gulp.watch(['app/js/**/*.js', '!app/js/**/main*'], ['scripts']);
   gulp.watch('app/scss/**/*.scss', ['style']);
+  gulp.watch('app/*.html', ['minify']);
 });
 
-gulp.task('default', ['scripts', 'style', 'watch']);
+gulp.task('default', ['scripts', 'style', 'minify', 'watch']);
