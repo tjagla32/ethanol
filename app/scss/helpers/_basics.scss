@@ -1,0 +1,51 @@
+body{
+  font-family: 'Lato-Light';
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  max-width: 100%;
+}
+.content{
+  background-color: #fff;
+  z-index: 2;
+}
+.text-center{
+  text-align: center;
+}
+.bold{
+  font-weight: bold;
+}
+.img-responsive{
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.uppercase{
+  text-transform: uppercase;
+}
+.section-title{
+  text-align: center;
+  margin-bottom: 50px;
+  & div:first-child{
+    font-size: 30px;
+    text-transform: uppercase;
+    span{
+      color: $color-primary;
+    }
+  }
+  p{
+    font-family: 'Lato-LightItalic';
+    font-size: 22px;
+    color: $color-description;
+  }
+  .line{
+    height: 1px;
+    background-color: #eee;
+    margin-top: 40px;
+  }
+  &::after{
+    content: url(../images/e-logo.png);
+    position: relative;
+    top: -32px;
+  }
+}

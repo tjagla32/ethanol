@@ -1,0 +1,29 @@
+footer{
+  padding: 50px 0;
+  background-color: $color-primary;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  z-index: -1;
+
+  .container{
+    width: 90%;
+  }
+  .footer-content{
+    display: flex;
+    justify-content: space-between;
+  }
+  ul{
+    list-style: none;
+    li{
+      float: left;
+      margin-right: 10px;
+    }
+  }
+  p{
+    margin: 0;
+    font-size: 20px;
+    font-family: 'Lato';
+  }
+}

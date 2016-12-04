@@ -1,6 +1,20 @@
 @import 'helpers/variables';
-@import 'helpers/mixins';
 @import 'helpers/functions';
+@import 'helpers/mixins';
+@import 'helpers/fonts';
+@import 'helpers/basics';
 //////////////////////////
-@import 'layout/basics';
 @import 'layout/header';
+@import 'layout/home';
+@import 'layout/blok';
+@import 'layout/focus';
+@import 'layout/about';
+@import 'layout/team';
+@import 'layout/feature';
+@import 'layout/work';
+@import 'layout/process';
+@import 'layout/pricing';
+@import 'layout/blog';
+@import 'layout/contact';
+@import 'layout/footer';
+@import 'layout/rwd';

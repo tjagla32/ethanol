@@ -1,0 +1,89 @@
+.pricing{
+  padding-bottom: 100px;
+  .pricing-content{
+    display: flex;
+    justify-content: center;
+  }
+  .panel{
+    border: 1px solid $color-panel;
+    color: $color-panel;
+    @include mprefix(border-radius, 5px);
+    //margin-right: 15px;
+    padding-bottom: 20px;
+    &:last-child{
+      margin-right: 0;
+    }
+    &-head{
+      background-color: $color-panel;
+      color: #fff;
+      text-transform: uppercase;
+      padding: 30px 100px;
+      font-family: 'Lato';
+      font-size: 22px;
+    }
+    &-body{
+      &-price{
+        padding: 15px 0;
+        border-bottom: 1px solid $color-panel;
+        font-size: 26px;
+        font-family: 'Lato';
+        span{
+          font-size: 60px;
+          font-family: 'Lato-Bold';
+          sup{
+            font-size: 40px;
+            position: relative;
+            top: 5px;
+          }
+        }
+      }
+      ul{
+        list-style-type: none;
+        margin: 5px 0;
+        li{
+          padding: 5px 0;
+          font-weight: bold;
+        }
+      }
+      .button{
+        display: inline-block;
+        padding: 0 60px;
+        background-color: #333;
+        color: #fff;
+        &:hover{
+          background-color: #fff;
+          color: #333;
+        }
+      }
+      .trial{
+        display: block;
+      }
+    }
+  }
+  .panel-active{
+    background-color: #fff;
+    transform: scale(1.05);
+    border-color: $color-primary;
+    -webkit-box-shadow: 0px 0px 74px 1px rgba(0,0,0,0.32);
+    -moz-box-shadow: 0px 0px 74px 1px rgba(0,0,0,0.32);
+    box-shadow: 0px 0px 74px 1px rgba(0,0,0,0.32);
+    .panel-head{
+      background-color: $color-primary;
+      padding: 30px 80px;
+    }
+    .panel-body{
+      &-price{
+        border-color: $color-primary;
+      }
+    }
+    .button-active{
+      border-color: $color-primary;
+      background-color: $color-primary;
+      color: #fff;
+      &:hover{
+        background-color: #fff;
+        color: $color-primary;
+      }
+    }
+  }
+}

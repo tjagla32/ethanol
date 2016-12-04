@@ -21,2237 +21,331 @@ void 0!==c?null===c?void r.removeAttr(a,b):e&&"set"in e&&void 0!==(d=e.set(a,c,b
  */
 !function(a){"use strict";"function"==typeof define&&define.amd?define(["jquery"],a):"undefined"!=typeof exports?module.exports=a(require("jquery")):a(jQuery)}(function(a){"use strict";var b=window.Slick||{};b=function(){function c(c,d){var f,e=this;e.defaults={accessibility:!0,adaptiveHeight:!1,appendArrows:a(c),appendDots:a(c),arrows:!0,asNavFor:null,prevArrow:'<button type="button" data-role="none" class="slick-prev" aria-label="Previous" tabindex="0" role="button">Previous</button>',nextArrow:'<button type="button" data-role="none" class="slick-next" aria-label="Next" tabindex="0" role="button">Next</button>',autoplay:!1,autoplaySpeed:3e3,centerMode:!1,centerPadding:"50px",cssEase:"ease",customPaging:function(b,c){return a('<button type="button" data-role="none" role="button" tabindex="0" />').text(c+1)},dots:!1,dotsClass:"slick-dots",draggable:!0,easing:"linear",edgeFriction:.35,fade:!1,focusOnSelect:!1,infinite:!0,initialSlide:0,lazyLoad:"ondemand",mobileFirst:!1,pauseOnHover:!0,pauseOnFocus:!0,pauseOnDotsHover:!1,respondTo:"window",responsive:null,rows:1,rtl:!1,slide:"",slidesPerRow:1,slidesToShow:1,slidesToScroll:1,speed:500,swipe:!0,swipeToSlide:!1,touchMove:!0,touchThreshold:5,useCSS:!0,useTransform:!0,variableWidth:!1,vertical:!1,verticalSwiping:!1,waitForAnimate:!0,zIndex:1e3},e.initials={animating:!1,dragging:!1,autoPlayTimer:null,currentDirection:0,currentLeft:null,currentSlide:0,direction:1,$dots:null,listWidth:null,listHeight:null,loadIndex:0,$nextArrow:null,$prevArrow:null,slideCount:null,slideWidth:null,$slideTrack:null,$slides:null,sliding:!1,slideOffset:0,swipeLeft:null,$list:null,touchObject:{},transformsEnabled:!1,unslicked:!1},a.extend(e,e.initials),e.activeBreakpoint=null,e.animType=null,e.animProp=null,e.breakpoints=[],e.breakpointSettings=[],e.cssTransitions=!1,e.focussed=!1,e.interrupted=!1,e.hidden="hidden",e.paused=!0,e.positionProp=null,e.respondTo=null,e.rowCount=1,e.shouldClick=!0,e.$slider=a(c),e.$slidesCache=null,e.transformType=null,e.transitionType=null,e.visibilityChange="visibilitychange",e.windowWidth=0,e.windowTimer=null,f=a(c).data("slick")||{},e.options=a.extend({},e.defaults,d,f),e.currentSlide=e.options.initialSlide,e.originalSettings=e.options,"undefined"!=typeof document.mozHidden?(e.hidden="mozHidden",e.visibilityChange="mozvisibilitychange"):"undefined"!=typeof document.webkitHidden&&(e.hidden="webkitHidden",e.visibilityChange="webkitvisibilitychange"),e.autoPlay=a.proxy(e.autoPlay,e),e.autoPlayClear=a.proxy(e.autoPlayClear,e),e.autoPlayIterator=a.proxy(e.autoPlayIterator,e),e.changeSlide=a.proxy(e.changeSlide,e),e.clickHandler=a.proxy(e.clickHandler,e),e.selectHandler=a.proxy(e.selectHandler,e),e.setPosition=a.proxy(e.setPosition,e),e.swipeHandler=a.proxy(e.swipeHandler,e),e.dragHandler=a.proxy(e.dragHandler,e),e.keyHandler=a.proxy(e.keyHandler,e),e.instanceUid=b++,e.htmlExpr=/^(?:\s*(<[\w\W]+>)[^>]*)$/,e.registerBreakpoints(),e.init(!0)}var b=0;return c}(),b.prototype.activateADA=function(){var a=this;a.$slideTrack.find(".slick-active").attr({"aria-hidden":"false"}).find("a, input, button, select").attr({tabindex:"0"})},b.prototype.addSlide=b.prototype.slickAdd=function(b,c,d){var e=this;if("boolean"==typeof c)d=c,c=null;else if(0>c||c>=e.slideCount)return!1;e.unload(),"number"==typeof c?0===c&&0===e.$slides.length?a(b).appendTo(e.$slideTrack):d?a(b).insertBefore(e.$slides.eq(c)):a(b).insertAfter(e.$slides.eq(c)):d===!0?a(b).prependTo(e.$slideTrack):a(b).appendTo(e.$slideTrack),e.$slides=e.$slideTrack.children(this.options.slide),e.$slideTrack.children(this.options.slide).detach(),e.$slideTrack.append(e.$slides),e.$slides.each(function(b,c){a(c).attr("data-slick-index",b)}),e.$slidesCache=e.$slides,e.reinit()},b.prototype.animateHeight=function(){var a=this;if(1===a.options.slidesToShow&&a.options.adaptiveHeight===!0&&a.options.vertical===!1){var b=a.$slides.eq(a.currentSlide).outerHeight(!0);a.$list.animate({height:b},a.options.speed)}},b.prototype.animateSlide=function(b,c){var d={},e=this;e.animateHeight(),e.options.rtl===!0&&e.options.vertical===!1&&(b=-b),e.transformsEnabled===!1?e.options.vertical===!1?e.$slideTrack.animate({left:b},e.options.speed,e.options.easing,c):e.$slideTrack.animate({top:b},e.options.speed,e.options.easing,c):e.cssTransitions===!1?(e.options.rtl===!0&&(e.currentLeft=-e.currentLeft),a({animStart:e.currentLeft}).animate({animStart:b},{duration:e.options.speed,easing:e.options.easing,step:function(a){a=Math.ceil(a),e.options.vertical===!1?(d[e.animType]="translate("+a+"px, 0px)",e.$slideTrack.css(d)):(d[e.animType]="translate(0px,"+a+"px)",e.$slideTrack.css(d))},complete:function(){c&&c.call()}})):(e.applyTransition(),b=Math.ceil(b),e.options.vertical===!1?d[e.animType]="translate3d("+b+"px, 0px, 0px)":d[e.animType]="translate3d(0px,"+b+"px, 0px)",e.$slideTrack.css(d),c&&setTimeout(function(){e.disableTransition(),c.call()},e.options.speed))},b.prototype.getNavTarget=function(){var b=this,c=b.options.asNavFor;return c&&null!==c&&(c=a(c).not(b.$slider)),c},b.prototype.asNavFor=function(b){var c=this,d=c.getNavTarget();null!==d&&"object"==typeof d&&d.each(function(){var c=a(this).slick("getSlick");c.unslicked||c.slideHandler(b,!0)})},b.prototype.applyTransition=function(a){var b=this,c={};b.options.fade===!1?c[b.transitionType]=b.transformType+" "+b.options.speed+"ms "+b.options.cssEase:c[b.transitionType]="opacity "+b.options.speed+"ms "+b.options.cssEase,b.options.fade===!1?b.$slideTrack.css(c):b.$slides.eq(a).css(c)},b.prototype.autoPlay=function(){var a=this;a.autoPlayClear(),a.slideCount>a.options.slidesToShow&&(a.autoPlayTimer=setInterval(a.autoPlayIterator,a.options.autoplaySpeed))},b.prototype.autoPlayClear=function(){var a=this;a.autoPlayTimer&&clearInterval(a.autoPlayTimer)},b.prototype.autoPlayIterator=function(){var a=this,b=a.currentSlide+a.options.slidesToScroll;a.paused||a.interrupted||a.focussed||(a.options.infinite===!1&&(1===a.direction&&a.currentSlide+1===a.slideCount-1?a.direction=0:0===a.direction&&(b=a.currentSlide-a.options.slidesToScroll,a.currentSlide-1===0&&(a.direction=1))),a.slideHandler(b))},b.prototype.buildArrows=function(){var b=this;b.options.arrows===!0&&(b.$prevArrow=a(b.options.prevArrow).addClass("slick-arrow"),b.$nextArrow=a(b.options.nextArrow).addClass("slick-arrow"),b.slideCount>b.options.slidesToShow?(b.$prevArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"),b.$nextArrow.removeClass("slick-hidden").removeAttr("aria-hidden tabindex"),b.htmlExpr.test(b.options.prevArrow)&&b.$prevArrow.prependTo(b.options.appendArrows),b.htmlExpr.test(b.options.nextArrow)&&b.$nextArrow.appendTo(b.options.appendArrows),b.options.infinite!==!0&&b.$prevArrow.addClass("slick-disabled").attr("aria-disabled","true")):b.$prevArrow.add(b.$nextArrow).addClass("slick-hidden").attr({"aria-disabled":"true",tabindex:"-1"}))},b.prototype.buildDots=function(){var c,d,b=this;if(b.options.dots===!0&&b.slideCount>b.options.slidesToShow){for(b.$slider.addClass("slick-dotted"),d=a("<ul />").addClass(b.options.dotsClass),c=0;c<=b.getDotCount();c+=1)d.append(a("<li />").append(b.options.customPaging.call(this,b,c)));b.$dots=d.appendTo(b.options.appendDots),b.$dots.find("li").first().addClass("slick-active").attr("aria-hidden","false")}},b.prototype.buildOut=function(){var b=this;b.$slides=b.$slider.children(b.options.slide+":not(.slick-cloned)").addClass("slick-slide"),b.slideCount=b.$slides.length,b.$slides.each(function(b,c){a(c).attr("data-slick-index",b).data("originalStyling",a(c).attr("style")||"")}),b.$slider.addClass("slick-slider"),b.$slideTrack=0===b.slideCount?a('<div class="slick-track"/>').appendTo(b.$slider):b.$slides.wrapAll('<div class="slick-track"/>').parent(),b.$list=b.$slideTrack.wrap('<div aria-live="polite" class="slick-list"/>').parent(),b.$slideTrack.css("opacity",0),(b.options.centerMode===!0||b.options.swipeToSlide===!0)&&(b.options.slidesToScroll=1),a("img[data-lazy]",b.$slider).not("[src]").addClass("slick-loading"),b.setupInfinite(),b.buildArrows(),b.buildDots(),b.updateDots(),b.setSlideClasses("number"==typeof b.currentSlide?b.currentSlide:0),b.options.draggable===!0&&b.$list.addClass("draggable")},b.prototype.buildRows=function(){var b,c,d,e,f,g,h,a=this;if(e=document.createDocumentFragment(),g=a.$slider.children(),a.options.rows>1){for(h=a.options.slidesPerRow*a.options.rows,f=Math.ceil(g.length/h),b=0;f>b;b++){var i=document.createElement("div");for(c=0;c<a.options.rows;c++){var j=document.createElement("div");for(d=0;d<a.options.slidesPerRow;d++){var k=b*h+(c*a.options.slidesPerRow+d);g.get(k)&&j.appendChild(g.get(k))}i.appendChild(j)}e.appendChild(i)}a.$slider.empty().append(e),a.$slider.children().children().children().css({width:100/a.options.slidesPerRow+"%",display:"inline-block"})}},b.prototype.checkResponsive=function(b,c){var e,f,g,d=this,h=!1,i=d.$slider.width(),j=window.innerWidth||a(window).width();if("window"===d.respondTo?g=j:"slider"===d.respondTo?g=i:"min"===d.respondTo&&(g=Math.min(j,i)),d.options.responsive&&d.options.responsive.length&&null!==d.options.responsive){f=null;for(e in d.breakpoints)d.breakpoints.hasOwnProperty(e)&&(d.originalSettings.mobileFirst===!1?g<d.breakpoints[e]&&(f=d.breakpoints[e]):g>d.breakpoints[e]&&(f=d.breakpoints[e]));null!==f?null!==d.activeBreakpoint?(f!==d.activeBreakpoint||c)&&(d.activeBreakpoint=f,"unslick"===d.breakpointSettings[f]?d.unslick(f):(d.options=a.extend({},d.originalSettings,d.breakpointSettings[f]),b===!0&&(d.currentSlide=d.options.initialSlide),d.refresh(b)),h=f):(d.activeBreakpoint=f,"unslick"===d.breakpointSettings[f]?d.unslick(f):(d.options=a.extend({},d.originalSettings,d.breakpointSettings[f]),b===!0&&(d.currentSlide=d.options.initialSlide),d.refresh(b)),h=f):null!==d.activeBreakpoint&&(d.activeBreakpoint=null,d.options=d.originalSettings,b===!0&&(d.currentSlide=d.options.initialSlide),d.refresh(b),h=f),b||h===!1||d.$slider.trigger("breakpoint",[d,h])}},b.prototype.changeSlide=function(b,c){var f,g,h,d=this,e=a(b.currentTarget);switch(e.is("a")&&b.preventDefault(),e.is("li")||(e=e.closest("li")),h=d.slideCount%d.options.slidesToScroll!==0,f=h?0:(d.slideCount-d.currentSlide)%d.options.slidesToScroll,b.data.message){case"previous":g=0===f?d.options.slidesToScroll:d.options.slidesToShow-f,d.slideCount>d.options.slidesToShow&&d.slideHandler(d.currentSlide-g,!1,c);break;case"next":g=0===f?d.options.slidesToScroll:f,d.slideCount>d.options.slidesToShow&&d.slideHandler(d.currentSlide+g,!1,c);break;case"index":var i=0===b.data.index?0:b.data.index||e.index()*d.options.slidesToScroll;d.slideHandler(d.checkNavigable(i),!1,c),e.children().trigger("focus");break;default:return}},b.prototype.checkNavigable=function(a){var c,d,b=this;if(c=b.getNavigableIndexes(),d=0,a>c[c.length-1])a=c[c.length-1];else for(var e in c){if(a<c[e]){a=d;break}d=c[e]}return a},b.prototype.cleanUpEvents=function(){var b=this;b.options.dots&&null!==b.$dots&&a("li",b.$dots).off("click.slick",b.changeSlide).off("mouseenter.slick",a.proxy(b.interrupt,b,!0)).off("mouseleave.slick",a.proxy(b.interrupt,b,!1)),b.$slider.off("focus.slick blur.slick"),b.options.arrows===!0&&b.slideCount>b.options.slidesToShow&&(b.$prevArrow&&b.$prevArrow.off("click.slick",b.changeSlide),b.$nextArrow&&b.$nextArrow.off("click.slick",b.changeSlide)),b.$list.off("touchstart.slick mousedown.slick",b.swipeHandler),b.$list.off("touchmove.slick mousemove.slick",b.swipeHandler),b.$list.off("touchend.slick mouseup.slick",b.swipeHandler),b.$list.off("touchcancel.slick mouseleave.slick",b.swipeHandler),b.$list.off("click.slick",b.clickHandler),a(document).off(b.visibilityChange,b.visibility),b.cleanUpSlideEvents(),b.options.accessibility===!0&&b.$list.off("keydown.slick",b.keyHandler),b.options.focusOnSelect===!0&&a(b.$slideTrack).children().off("click.slick",b.selectHandler),a(window).off("orientationchange.slick.slick-"+b.instanceUid,b.orientationChange),a(window).off("resize.slick.slick-"+b.instanceUid,b.resize),a("[draggable!=true]",b.$slideTrack).off("dragstart",b.preventDefault),a(window).off("load.slick.slick-"+b.instanceUid,b.setPosition),a(document).off("ready.slick.slick-"+b.instanceUid,b.setPosition)},b.prototype.cleanUpSlideEvents=function(){var b=this;b.$list.off("mouseenter.slick",a.proxy(b.interrupt,b,!0)),b.$list.off("mouseleave.slick",a.proxy(b.interrupt,b,!1))},b.prototype.cleanUpRows=function(){var b,a=this;a.options.rows>1&&(b=a.$slides.children().children(),b.removeAttr("style"),a.$slider.empty().append(b))},b.prototype.clickHandler=function(a){var b=this;b.shouldClick===!1&&(a.stopImmediatePropagation(),a.stopPropagation(),a.preventDefault())},b.prototype.destroy=function(b){var c=this;c.autoPlayClear(),c.touchObject={},c.cleanUpEvents(),a(".slick-cloned",c.$slider).detach(),c.$dots&&c.$dots.remove(),c.$prevArrow&&c.$prevArrow.length&&(c.$prevArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display",""),c.htmlExpr.test(c.options.prevArrow)&&c.$prevArrow.remove()),c.$nextArrow&&c.$nextArrow.length&&(c.$nextArrow.removeClass("slick-disabled slick-arrow slick-hidden").removeAttr("aria-hidden aria-disabled tabindex").css("display",""),c.htmlExpr.test(c.options.nextArrow)&&c.$nextArrow.remove()),c.$slides&&(c.$slides.removeClass("slick-slide slick-active slick-center slick-visible slick-current").removeAttr("aria-hidden").removeAttr("data-slick-index").each(function(){a(this).attr("style",a(this).data("originalStyling"))}),c.$slideTrack.children(this.options.slide).detach(),c.$slideTrack.detach(),c.$list.detach(),c.$slider.append(c.$slides)),c.cleanUpRows(),c.$slider.removeClass("slick-slider"),c.$slider.removeClass("slick-initialized"),c.$slider.removeClass("slick-dotted"),c.unslicked=!0,b||c.$slider.trigger("destroy",[c])},b.prototype.disableTransition=function(a){var b=this,c={};c[b.transitionType]="",b.options.fade===!1?b.$slideTrack.css(c):b.$slides.eq(a).css(c)},b.prototype.fadeSlide=function(a,b){var c=this;c.cssTransitions===!1?(c.$slides.eq(a).css({zIndex:c.options.zIndex}),c.$slides.eq(a).animate({opacity:1},c.options.speed,c.options.easing,b)):(c.applyTransition(a),c.$slides.eq(a).css({opacity:1,zIndex:c.options.zIndex}),b&&setTimeout(function(){c.disableTransition(a),b.call()},c.options.speed))},b.prototype.fadeSlideOut=function(a){var b=this;b.cssTransitions===!1?b.$slides.eq(a).animate({opacity:0,zIndex:b.options.zIndex-2},b.options.speed,b.options.easing):(b.applyTransition(a),b.$slides.eq(a).css({opacity:0,zIndex:b.options.zIndex-2}))},b.prototype.filterSlides=b.prototype.slickFilter=function(a){var b=this;null!==a&&(b.$slidesCache=b.$slides,b.unload(),b.$slideTrack.children(this.options.slide).detach(),b.$slidesCache.filter(a).appendTo(b.$slideTrack),b.reinit())},b.prototype.focusHandler=function(){var b=this;b.$slider.off("focus.slick blur.slick").on("focus.slick blur.slick","*:not(.slick-arrow)",function(c){c.stopImmediatePropagation();var d=a(this);setTimeout(function(){b.options.pauseOnFocus&&(b.focussed=d.is(":focus"),b.autoPlay())},0)})},b.prototype.getCurrent=b.prototype.slickCurrentSlide=function(){var a=this;return a.currentSlide},b.prototype.getDotCount=function(){var a=this,b=0,c=0,d=0;if(a.options.infinite===!0)for(;b<a.slideCount;)++d,b=c+a.options.slidesToScroll,c+=a.options.slidesToScroll<=a.options.slidesToShow?a.options.slidesToScroll:a.options.slidesToShow;else if(a.options.centerMode===!0)d=a.slideCount;else if(a.options.asNavFor)for(;b<a.slideCount;)++d,b=c+a.options.slidesToScroll,c+=a.options.slidesToScroll<=a.options.slidesToShow?a.options.slidesToScroll:a.options.slidesToShow;else d=1+Math.ceil((a.slideCount-a.options.slidesToShow)/a.options.slidesToScroll);return d-1},b.prototype.getLeft=function(a){var c,d,f,b=this,e=0;return b.slideOffset=0,d=b.$slides.first().outerHeight(!0),b.options.infinite===!0?(b.slideCount>b.options.slidesToShow&&(b.slideOffset=b.slideWidth*b.options.slidesToShow*-1,e=d*b.options.slidesToShow*-1),b.slideCount%b.options.slidesToScroll!==0&&a+b.options.slidesToScroll>b.slideCount&&b.slideCount>b.options.slidesToShow&&(a>b.slideCount?(b.slideOffset=(b.options.slidesToShow-(a-b.slideCount))*b.slideWidth*-1,e=(b.options.slidesToShow-(a-b.slideCount))*d*-1):(b.slideOffset=b.slideCount%b.options.slidesToScroll*b.slideWidth*-1,e=b.slideCount%b.options.slidesToScroll*d*-1))):a+b.options.slidesToShow>b.slideCount&&(b.slideOffset=(a+b.options.slidesToShow-b.slideCount)*b.slideWidth,e=(a+b.options.slidesToShow-b.slideCount)*d),b.slideCount<=b.options.slidesToShow&&(b.slideOffset=0,e=0),b.options.centerMode===!0&&b.options.infinite===!0?b.slideOffset+=b.slideWidth*Math.floor(b.options.slidesToShow/2)-b.slideWidth:b.options.centerMode===!0&&(b.slideOffset=0,b.slideOffset+=b.slideWidth*Math.floor(b.options.slidesToShow/2)),c=b.options.vertical===!1?a*b.slideWidth*-1+b.slideOffset:a*d*-1+e,b.options.variableWidth===!0&&(f=b.slideCount<=b.options.slidesToShow||b.options.infinite===!1?b.$slideTrack.children(".slick-slide").eq(a):b.$slideTrack.children(".slick-slide").eq(a+b.options.slidesToShow),c=b.options.rtl===!0?f[0]?-1*(b.$slideTrack.width()-f[0].offsetLeft-f.width()):0:f[0]?-1*f[0].offsetLeft:0,b.options.centerMode===!0&&(f=b.slideCount<=b.options.slidesToShow||b.options.infinite===!1?b.$slideTrack.children(".slick-slide").eq(a):b.$slideTrack.children(".slick-slide").eq(a+b.options.slidesToShow+1),c=b.options.rtl===!0?f[0]?-1*(b.$slideTrack.width()-f[0].offsetLeft-f.width()):0:f[0]?-1*f[0].offsetLeft:0,c+=(b.$list.width()-f.outerWidth())/2)),c},b.prototype.getOption=b.prototype.slickGetOption=function(a){var b=this;return b.options[a]},b.prototype.getNavigableIndexes=function(){var e,a=this,b=0,c=0,d=[];for(a.options.infinite===!1?e=a.slideCount:(b=-1*a.options.slidesToScroll,c=-1*a.options.slidesToScroll,e=2*a.slideCount);e>b;)d.push(b),b=c+a.options.slidesToScroll,c+=a.options.slidesToScroll<=a.options.slidesToShow?a.options.slidesToScroll:a.options.slidesToShow;return d},b.prototype.getSlick=function(){return this},b.prototype.getSlideCount=function(){var c,d,e,b=this;return e=b.options.centerMode===!0?b.slideWidth*Math.floor(b.options.slidesToShow/2):0,b.options.swipeToSlide===!0?(b.$slideTrack.find(".slick-slide").each(function(c,f){return f.offsetLeft-e+a(f).outerWidth()/2>-1*b.swipeLeft?(d=f,!1):void 0}),c=Math.abs(a(d).attr("data-slick-index")-b.currentSlide)||1):b.options.slidesToScroll},b.prototype.goTo=b.prototype.slickGoTo=function(a,b){var c=this;c.changeSlide({data:{message:"index",index:parseInt(a)}},b)},b.prototype.init=function(b){var c=this;a(c.$slider).hasClass("slick-initialized")||(a(c.$slider).addClass("slick-initialized"),c.buildRows(),c.buildOut(),c.setProps(),c.startLoad(),c.loadSlider(),c.initializeEvents(),c.updateArrows(),c.updateDots(),c.checkResponsive(!0),c.focusHandler()),b&&c.$slider.trigger("init",[c]),c.options.accessibility===!0&&c.initADA(),c.options.autoplay&&(c.paused=!1,c.autoPlay())},b.prototype.initADA=function(){var b=this;b.$slides.add(b.$slideTrack.find(".slick-cloned")).attr({"aria-hidden":"true",tabindex:"-1"}).find("a, input, button, select").attr({tabindex:"-1"}),b.$slideTrack.attr("role","listbox"),b.$slides.not(b.$slideTrack.find(".slick-cloned")).each(function(c){a(this).attr({role:"option","aria-describedby":"slick-slide"+b.instanceUid+c})}),null!==b.$dots&&b.$dots.attr("role","tablist").find("li").each(function(c){a(this).attr({role:"presentation","aria-selected":"false","aria-controls":"navigation"+b.instanceUid+c,id:"slick-slide"+b.instanceUid+c})}).first().attr("aria-selected","true").end().find("button").attr("role","button").end().closest("div").attr("role","toolbar"),b.activateADA()},b.prototype.initArrowEvents=function(){var a=this;a.options.arrows===!0&&a.slideCount>a.options.slidesToShow&&(a.$prevArrow.off("click.slick").on("click.slick",{message:"previous"},a.changeSlide),a.$nextArrow.off("click.slick").on("click.slick",{message:"next"},a.changeSlide))},b.prototype.initDotEvents=function(){var b=this;b.options.dots===!0&&b.slideCount>b.options.slidesToShow&&a("li",b.$dots).on("click.slick",{message:"index"},b.changeSlide),b.options.dots===!0&&b.options.pauseOnDotsHover===!0&&a("li",b.$dots).on("mouseenter.slick",a.proxy(b.interrupt,b,!0)).on("mouseleave.slick",a.proxy(b.interrupt,b,!1))},b.prototype.initSlideEvents=function(){var b=this;b.options.pauseOnHover&&(b.$list.on("mouseenter.slick",a.proxy(b.interrupt,b,!0)),b.$list.on("mouseleave.slick",a.proxy(b.interrupt,b,!1)))},b.prototype.initializeEvents=function(){var b=this;b.initArrowEvents(),b.initDotEvents(),b.initSlideEvents(),b.$list.on("touchstart.slick mousedown.slick",{action:"start"},b.swipeHandler),b.$list.on("touchmove.slick mousemove.slick",{action:"move"},b.swipeHandler),b.$list.on("touchend.slick mouseup.slick",{action:"end"},b.swipeHandler),b.$list.on("touchcancel.slick mouseleave.slick",{action:"end"},b.swipeHandler),b.$list.on("click.slick",b.clickHandler),a(document).on(b.visibilityChange,a.proxy(b.visibility,b)),b.options.accessibility===!0&&b.$list.on("keydown.slick",b.keyHandler),b.options.focusOnSelect===!0&&a(b.$slideTrack).children().on("click.slick",b.selectHandler),a(window).on("orientationchange.slick.slick-"+b.instanceUid,a.proxy(b.orientationChange,b)),a(window).on("resize.slick.slick-"+b.instanceUid,a.proxy(b.resize,b)),a("[draggable!=true]",b.$slideTrack).on("dragstart",b.preventDefault),a(window).on("load.slick.slick-"+b.instanceUid,b.setPosition),a(document).on("ready.slick.slick-"+b.instanceUid,b.setPosition)},b.prototype.initUI=function(){var a=this;a.options.arrows===!0&&a.slideCount>a.options.slidesToShow&&(a.$prevArrow.show(),a.$nextArrow.show()),a.options.dots===!0&&a.slideCount>a.options.slidesToShow&&a.$dots.show()},b.prototype.keyHandler=function(a){var b=this;a.target.tagName.match("TEXTAREA|INPUT|SELECT")||(37===a.keyCode&&b.options.accessibility===!0?b.changeSlide({data:{message:b.options.rtl===!0?"next":"previous"}}):39===a.keyCode&&b.options.accessibility===!0&&b.changeSlide({data:{message:b.options.rtl===!0?"previous":"next"}}))},b.prototype.lazyLoad=function(){function g(c){a("img[data-lazy]",c).each(function(){var c=a(this),d=a(this).attr("data-lazy"),e=document.createElement("img");e.onload=function(){c.animate({opacity:0},100,function(){c.attr("src",d).animate({opacity:1},200,function(){c.removeAttr("data-lazy").removeClass("slick-loading")}),b.$slider.trigger("lazyLoaded",[b,c,d])})},e.onerror=function(){c.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"),b.$slider.trigger("lazyLoadError",[b,c,d])},e.src=d})}var c,d,e,f,b=this;b.options.centerMode===!0?b.options.infinite===!0?(e=b.currentSlide+(b.options.slidesToShow/2+1),f=e+b.options.slidesToShow+2):(e=Math.max(0,b.currentSlide-(b.options.slidesToShow/2+1)),f=2+(b.options.slidesToShow/2+1)+b.currentSlide):(e=b.options.infinite?b.options.slidesToShow+b.currentSlide:b.currentSlide,f=Math.ceil(e+b.options.slidesToShow),b.options.fade===!0&&(e>0&&e--,f<=b.slideCount&&f++)),c=b.$slider.find(".slick-slide").slice(e,f),g(c),b.slideCount<=b.options.slidesToShow?(d=b.$slider.find(".slick-slide"),g(d)):b.currentSlide>=b.slideCount-b.options.slidesToShow?(d=b.$slider.find(".slick-cloned").slice(0,b.options.slidesToShow),g(d)):0===b.currentSlide&&(d=b.$slider.find(".slick-cloned").slice(-1*b.options.slidesToShow),g(d))},b.prototype.loadSlider=function(){var a=this;a.setPosition(),a.$slideTrack.css({opacity:1}),a.$slider.removeClass("slick-loading"),a.initUI(),"progressive"===a.options.lazyLoad&&a.progressiveLazyLoad()},b.prototype.next=b.prototype.slickNext=function(){var a=this;a.changeSlide({data:{message:"next"}})},b.prototype.orientationChange=function(){var a=this;a.checkResponsive(),a.setPosition()},b.prototype.pause=b.prototype.slickPause=function(){var a=this;a.autoPlayClear(),a.paused=!0},b.prototype.play=b.prototype.slickPlay=function(){var a=this;a.autoPlay(),a.options.autoplay=!0,a.paused=!1,a.focussed=!1,a.interrupted=!1},b.prototype.postSlide=function(a){var b=this;b.unslicked||(b.$slider.trigger("afterChange",[b,a]),b.animating=!1,b.setPosition(),b.swipeLeft=null,b.options.autoplay&&b.autoPlay(),b.options.accessibility===!0&&b.initADA())},b.prototype.prev=b.prototype.slickPrev=function(){var a=this;a.changeSlide({data:{message:"previous"}})},b.prototype.preventDefault=function(a){a.preventDefault()},b.prototype.progressiveLazyLoad=function(b){b=b||1;var e,f,g,c=this,d=a("img[data-lazy]",c.$slider);d.length?(e=d.first(),f=e.attr("data-lazy"),g=document.createElement("img"),g.onload=function(){e.attr("src",f).removeAttr("data-lazy").removeClass("slick-loading"),c.options.adaptiveHeight===!0&&c.setPosition(),c.$slider.trigger("lazyLoaded",[c,e,f]),c.progressiveLazyLoad()},g.onerror=function(){3>b?setTimeout(function(){c.progressiveLazyLoad(b+1)},500):(e.removeAttr("data-lazy").removeClass("slick-loading").addClass("slick-lazyload-error"),c.$slider.trigger("lazyLoadError",[c,e,f]),c.progressiveLazyLoad())},g.src=f):c.$slider.trigger("allImagesLoaded",[c])},b.prototype.refresh=function(b){var d,e,c=this;e=c.slideCount-c.options.slidesToShow,!c.options.infinite&&c.currentSlide>e&&(c.currentSlide=e),c.slideCount<=c.options.slidesToShow&&(c.currentSlide=0),d=c.currentSlide,c.destroy(!0),a.extend(c,c.initials,{currentSlide:d}),c.init(),b||c.changeSlide({data:{message:"index",index:d}},!1)},b.prototype.registerBreakpoints=function(){var c,d,e,b=this,f=b.options.responsive||null;if("array"===a.type(f)&&f.length){b.respondTo=b.options.respondTo||"window";for(c in f)if(e=b.breakpoints.length-1,d=f[c].breakpoint,f.hasOwnProperty(c)){for(;e>=0;)b.breakpoints[e]&&b.breakpoints[e]===d&&b.breakpoints.splice(e,1),e--;b.breakpoints.push(d),b.breakpointSettings[d]=f[c].settings}b.breakpoints.sort(function(a,c){return b.options.mobileFirst?a-c:c-a})}},b.prototype.reinit=function(){var b=this;b.$slides=b.$slideTrack.children(b.options.slide).addClass("slick-slide"),b.slideCount=b.$slides.length,b.currentSlide>=b.slideCount&&0!==b.currentSlide&&(b.currentSlide=b.currentSlide-b.options.slidesToScroll),b.slideCount<=b.options.slidesToShow&&(b.currentSlide=0),b.registerBreakpoints(),b.setProps(),b.setupInfinite(),b.buildArrows(),b.updateArrows(),b.initArrowEvents(),b.buildDots(),b.updateDots(),b.initDotEvents(),b.cleanUpSlideEvents(),b.initSlideEvents(),b.checkResponsive(!1,!0),b.options.focusOnSelect===!0&&a(b.$slideTrack).children().on("click.slick",b.selectHandler),b.setSlideClasses("number"==typeof b.currentSlide?b.currentSlide:0),b.setPosition(),b.focusHandler(),b.paused=!b.options.autoplay,b.autoPlay(),b.$slider.trigger("reInit",[b])},b.prototype.resize=function(){var b=this;a(window).width()!==b.windowWidth&&(clearTimeout(b.windowDelay),b.windowDelay=window.setTimeout(function(){b.windowWidth=a(window).width(),b.checkResponsive(),b.unslicked||b.setPosition()},50))},b.prototype.removeSlide=b.prototype.slickRemove=function(a,b,c){var d=this;return"boolean"==typeof a?(b=a,a=b===!0?0:d.slideCount-1):a=b===!0?--a:a,d.slideCount<1||0>a||a>d.slideCount-1?!1:(d.unload(),c===!0?d.$slideTrack.children().remove():d.$slideTrack.children(this.options.slide).eq(a).remove(),d.$slides=d.$slideTrack.children(this.options.slide),d.$slideTrack.children(this.options.slide).detach(),d.$slideTrack.append(d.$slides),d.$slidesCache=d.$slides,void d.reinit())},b.prototype.setCSS=function(a){var d,e,b=this,c={};b.options.rtl===!0&&(a=-a),d="left"==b.positionProp?Math.ceil(a)+"px":"0px",e="top"==b.positionProp?Math.ceil(a)+"px":"0px",c[b.positionProp]=a,b.transformsEnabled===!1?b.$slideTrack.css(c):(c={},b.cssTransitions===!1?(c[b.animType]="translate("+d+", "+e+")",b.$slideTrack.css(c)):(c[b.animType]="translate3d("+d+", "+e+", 0px)",b.$slideTrack.css(c)))},b.prototype.setDimensions=function(){var a=this;a.options.vertical===!1?a.options.centerMode===!0&&a.$list.css({padding:"0px "+a.options.centerPadding}):(a.$list.height(a.$slides.first().outerHeight(!0)*a.options.slidesToShow),a.options.centerMode===!0&&a.$list.css({padding:a.options.centerPadding+" 0px"})),a.listWidth=a.$list.width(),a.listHeight=a.$list.height(),a.options.vertical===!1&&a.options.variableWidth===!1?(a.slideWidth=Math.ceil(a.listWidth/a.options.slidesToShow),a.$slideTrack.width(Math.ceil(a.slideWidth*a.$slideTrack.children(".slick-slide").length))):a.options.variableWidth===!0?a.$slideTrack.width(5e3*a.slideCount):(a.slideWidth=Math.ceil(a.listWidth),a.$slideTrack.height(Math.ceil(a.$slides.first().outerHeight(!0)*a.$slideTrack.children(".slick-slide").length)));var b=a.$slides.first().outerWidth(!0)-a.$slides.first().width();a.options.variableWidth===!1&&a.$slideTrack.children(".slick-slide").width(a.slideWidth-b)},b.prototype.setFade=function(){var c,b=this;b.$slides.each(function(d,e){c=b.slideWidth*d*-1,b.options.rtl===!0?a(e).css({position:"relative",right:c,top:0,zIndex:b.options.zIndex-2,opacity:0}):a(e).css({position:"relative",left:c,top:0,zIndex:b.options.zIndex-2,opacity:0})}),b.$slides.eq(b.currentSlide).css({zIndex:b.options.zIndex-1,opacity:1})},b.prototype.setHeight=function(){var a=this;if(1===a.options.slidesToShow&&a.options.adaptiveHeight===!0&&a.options.vertical===!1){var b=a.$slides.eq(a.currentSlide).outerHeight(!0);a.$list.css("height",b)}},b.prototype.setOption=b.prototype.slickSetOption=function(){var c,d,e,f,h,b=this,g=!1;if("object"===a.type(arguments[0])?(e=arguments[0],g=arguments[1],h="multiple"):"string"===a.type(arguments[0])&&(e=arguments[0],f=arguments[1],g=arguments[2],"responsive"===arguments[0]&&"array"===a.type(arguments[1])?h="responsive":"undefined"!=typeof arguments[1]&&(h="single")),"single"===h)b.options[e]=f;else if("multiple"===h)a.each(e,function(a,c){b.options[a]=c});else if("responsive"===h)for(d in f)if("array"!==a.type(b.options.responsive))b.options.responsive=[f[d]];else{for(c=b.options.responsive.length-1;c>=0;)b.options.responsive[c].breakpoint===f[d].breakpoint&&b.options.responsive.splice(c,1),c--;b.options.responsive.push(f[d])}g&&(b.unload(),b.reinit())},b.prototype.setPosition=function(){var a=this;a.setDimensions(),a.setHeight(),a.options.fade===!1?a.setCSS(a.getLeft(a.currentSlide)):a.setFade(),a.$slider.trigger("setPosition",[a])},b.prototype.setProps=function(){var a=this,b=document.body.style;a.positionProp=a.options.vertical===!0?"top":"left","top"===a.positionProp?a.$slider.addClass("slick-vertical"):a.$slider.removeClass("slick-vertical"),(void 0!==b.WebkitTransition||void 0!==b.MozTransition||void 0!==b.msTransition)&&a.options.useCSS===!0&&(a.cssTransitions=!0),a.options.fade&&("number"==typeof a.options.zIndex?a.options.zIndex<3&&(a.options.zIndex=3):a.options.zIndex=a.defaults.zIndex),void 0!==b.OTransform&&(a.animType="OTransform",a.transformType="-o-transform",a.transitionType="OTransition",void 0===b.perspectiveProperty&&void 0===b.webkitPerspective&&(a.animType=!1)),void 0!==b.MozTransform&&(a.animType="MozTransform",a.transformType="-moz-transform",a.transitionType="MozTransition",void 0===b.perspectiveProperty&&void 0===b.MozPerspective&&(a.animType=!1)),void 0!==b.webkitTransform&&(a.animType="webkitTransform",a.transformType="-webkit-transform",a.transitionType="webkitTransition",void 0===b.perspectiveProperty&&void 0===b.webkitPerspective&&(a.animType=!1)),void 0!==b.msTransform&&(a.animType="msTransform",a.transformType="-ms-transform",a.transitionType="msTransition",void 0===b.msTransform&&(a.animType=!1)),void 0!==b.transform&&a.animType!==!1&&(a.animType="transform",a.transformType="transform",a.transitionType="transition"),a.transformsEnabled=a.options.useTransform&&null!==a.animType&&a.animType!==!1},b.prototype.setSlideClasses=function(a){var c,d,e,f,b=this;d=b.$slider.find(".slick-slide").removeClass("slick-active slick-center slick-current").attr("aria-hidden","true"),b.$slides.eq(a).addClass("slick-current"),b.options.centerMode===!0?(c=Math.floor(b.options.slidesToShow/2),b.options.infinite===!0&&(a>=c&&a<=b.slideCount-1-c?b.$slides.slice(a-c,a+c+1).addClass("slick-active").attr("aria-hidden","false"):(e=b.options.slidesToShow+a,
 d.slice(e-c+1,e+c+2).addClass("slick-active").attr("aria-hidden","false")),0===a?d.eq(d.length-1-b.options.slidesToShow).addClass("slick-center"):a===b.slideCount-1&&d.eq(b.options.slidesToShow).addClass("slick-center")),b.$slides.eq(a).addClass("slick-center")):a>=0&&a<=b.slideCount-b.options.slidesToShow?b.$slides.slice(a,a+b.options.slidesToShow).addClass("slick-active").attr("aria-hidden","false"):d.length<=b.options.slidesToShow?d.addClass("slick-active").attr("aria-hidden","false"):(f=b.slideCount%b.options.slidesToShow,e=b.options.infinite===!0?b.options.slidesToShow+a:a,b.options.slidesToShow==b.options.slidesToScroll&&b.slideCount-a<b.options.slidesToShow?d.slice(e-(b.options.slidesToShow-f),e+f).addClass("slick-active").attr("aria-hidden","false"):d.slice(e,e+b.options.slidesToShow).addClass("slick-active").attr("aria-hidden","false")),"ondemand"===b.options.lazyLoad&&b.lazyLoad()},b.prototype.setupInfinite=function(){var c,d,e,b=this;if(b.options.fade===!0&&(b.options.centerMode=!1),b.options.infinite===!0&&b.options.fade===!1&&(d=null,b.slideCount>b.options.slidesToShow)){for(e=b.options.centerMode===!0?b.options.slidesToShow+1:b.options.slidesToShow,c=b.slideCount;c>b.slideCount-e;c-=1)d=c-1,a(b.$slides[d]).clone(!0).attr("id","").attr("data-slick-index",d-b.slideCount).prependTo(b.$slideTrack).addClass("slick-cloned");for(c=0;e>c;c+=1)d=c,a(b.$slides[d]).clone(!0).attr("id","").attr("data-slick-index",d+b.slideCount).appendTo(b.$slideTrack).addClass("slick-cloned");b.$slideTrack.find(".slick-cloned").find("[id]").each(function(){a(this).attr("id","")})}},b.prototype.interrupt=function(a){var b=this;a||b.autoPlay(),b.interrupted=a},b.prototype.selectHandler=function(b){var c=this,d=a(b.target).is(".slick-slide")?a(b.target):a(b.target).parents(".slick-slide"),e=parseInt(d.attr("data-slick-index"));return e||(e=0),c.slideCount<=c.options.slidesToShow?(c.setSlideClasses(e),void c.asNavFor(e)):void c.slideHandler(e)},b.prototype.slideHandler=function(a,b,c){var d,e,f,g,j,h=null,i=this;return b=b||!1,i.animating===!0&&i.options.waitForAnimate===!0||i.options.fade===!0&&i.currentSlide===a||i.slideCount<=i.options.slidesToShow?void 0:(b===!1&&i.asNavFor(a),d=a,h=i.getLeft(d),g=i.getLeft(i.currentSlide),i.currentLeft=null===i.swipeLeft?g:i.swipeLeft,i.options.infinite===!1&&i.options.centerMode===!1&&(0>a||a>i.getDotCount()*i.options.slidesToScroll)?void(i.options.fade===!1&&(d=i.currentSlide,c!==!0?i.animateSlide(g,function(){i.postSlide(d)}):i.postSlide(d))):i.options.infinite===!1&&i.options.centerMode===!0&&(0>a||a>i.slideCount-i.options.slidesToScroll)?void(i.options.fade===!1&&(d=i.currentSlide,c!==!0?i.animateSlide(g,function(){i.postSlide(d)}):i.postSlide(d))):(i.options.autoplay&&clearInterval(i.autoPlayTimer),e=0>d?i.slideCount%i.options.slidesToScroll!==0?i.slideCount-i.slideCount%i.options.slidesToScroll:i.slideCount+d:d>=i.slideCount?i.slideCount%i.options.slidesToScroll!==0?0:d-i.slideCount:d,i.animating=!0,i.$slider.trigger("beforeChange",[i,i.currentSlide,e]),f=i.currentSlide,i.currentSlide=e,i.setSlideClasses(i.currentSlide),i.options.asNavFor&&(j=i.getNavTarget(),j=j.slick("getSlick"),j.slideCount<=j.options.slidesToShow&&j.setSlideClasses(i.currentSlide)),i.updateDots(),i.updateArrows(),i.options.fade===!0?(c!==!0?(i.fadeSlideOut(f),i.fadeSlide(e,function(){i.postSlide(e)})):i.postSlide(e),void i.animateHeight()):void(c!==!0?i.animateSlide(h,function(){i.postSlide(e)}):i.postSlide(e))))},b.prototype.startLoad=function(){var a=this;a.options.arrows===!0&&a.slideCount>a.options.slidesToShow&&(a.$prevArrow.hide(),a.$nextArrow.hide()),a.options.dots===!0&&a.slideCount>a.options.slidesToShow&&a.$dots.hide(),a.$slider.addClass("slick-loading")},b.prototype.swipeDirection=function(){var a,b,c,d,e=this;return a=e.touchObject.startX-e.touchObject.curX,b=e.touchObject.startY-e.touchObject.curY,c=Math.atan2(b,a),d=Math.round(180*c/Math.PI),0>d&&(d=360-Math.abs(d)),45>=d&&d>=0?e.options.rtl===!1?"left":"right":360>=d&&d>=315?e.options.rtl===!1?"left":"right":d>=135&&225>=d?e.options.rtl===!1?"right":"left":e.options.verticalSwiping===!0?d>=35&&135>=d?"down":"up":"vertical"},b.prototype.swipeEnd=function(a){var c,d,b=this;if(b.dragging=!1,b.interrupted=!1,b.shouldClick=b.touchObject.swipeLength>10?!1:!0,void 0===b.touchObject.curX)return!1;if(b.touchObject.edgeHit===!0&&b.$slider.trigger("edge",[b,b.swipeDirection()]),b.touchObject.swipeLength>=b.touchObject.minSwipe){switch(d=b.swipeDirection()){case"left":case"down":c=b.options.swipeToSlide?b.checkNavigable(b.currentSlide+b.getSlideCount()):b.currentSlide+b.getSlideCount(),b.currentDirection=0;break;case"right":case"up":c=b.options.swipeToSlide?b.checkNavigable(b.currentSlide-b.getSlideCount()):b.currentSlide-b.getSlideCount(),b.currentDirection=1}"vertical"!=d&&(b.slideHandler(c),b.touchObject={},b.$slider.trigger("swipe",[b,d]))}else b.touchObject.startX!==b.touchObject.curX&&(b.slideHandler(b.currentSlide),b.touchObject={})},b.prototype.swipeHandler=function(a){var b=this;if(!(b.options.swipe===!1||"ontouchend"in document&&b.options.swipe===!1||b.options.draggable===!1&&-1!==a.type.indexOf("mouse")))switch(b.touchObject.fingerCount=a.originalEvent&&void 0!==a.originalEvent.touches?a.originalEvent.touches.length:1,b.touchObject.minSwipe=b.listWidth/b.options.touchThreshold,b.options.verticalSwiping===!0&&(b.touchObject.minSwipe=b.listHeight/b.options.touchThreshold),a.data.action){case"start":b.swipeStart(a);break;case"move":b.swipeMove(a);break;case"end":b.swipeEnd(a)}},b.prototype.swipeMove=function(a){var d,e,f,g,h,b=this;return h=void 0!==a.originalEvent?a.originalEvent.touches:null,!b.dragging||h&&1!==h.length?!1:(d=b.getLeft(b.currentSlide),b.touchObject.curX=void 0!==h?h[0].pageX:a.clientX,b.touchObject.curY=void 0!==h?h[0].pageY:a.clientY,b.touchObject.swipeLength=Math.round(Math.sqrt(Math.pow(b.touchObject.curX-b.touchObject.startX,2))),b.options.verticalSwiping===!0&&(b.touchObject.swipeLength=Math.round(Math.sqrt(Math.pow(b.touchObject.curY-b.touchObject.startY,2)))),e=b.swipeDirection(),"vertical"!==e?(void 0!==a.originalEvent&&b.touchObject.swipeLength>4&&a.preventDefault(),g=(b.options.rtl===!1?1:-1)*(b.touchObject.curX>b.touchObject.startX?1:-1),b.options.verticalSwiping===!0&&(g=b.touchObject.curY>b.touchObject.startY?1:-1),f=b.touchObject.swipeLength,b.touchObject.edgeHit=!1,b.options.infinite===!1&&(0===b.currentSlide&&"right"===e||b.currentSlide>=b.getDotCount()&&"left"===e)&&(f=b.touchObject.swipeLength*b.options.edgeFriction,b.touchObject.edgeHit=!0),b.options.vertical===!1?b.swipeLeft=d+f*g:b.swipeLeft=d+f*(b.$list.height()/b.listWidth)*g,b.options.verticalSwiping===!0&&(b.swipeLeft=d+f*g),b.options.fade===!0||b.options.touchMove===!1?!1:b.animating===!0?(b.swipeLeft=null,!1):void b.setCSS(b.swipeLeft)):void 0)},b.prototype.swipeStart=function(a){var c,b=this;return b.interrupted=!0,1!==b.touchObject.fingerCount||b.slideCount<=b.options.slidesToShow?(b.touchObject={},!1):(void 0!==a.originalEvent&&void 0!==a.originalEvent.touches&&(c=a.originalEvent.touches[0]),b.touchObject.startX=b.touchObject.curX=void 0!==c?c.pageX:a.clientX,b.touchObject.startY=b.touchObject.curY=void 0!==c?c.pageY:a.clientY,void(b.dragging=!0))},b.prototype.unfilterSlides=b.prototype.slickUnfilter=function(){var a=this;null!==a.$slidesCache&&(a.unload(),a.$slideTrack.children(this.options.slide).detach(),a.$slidesCache.appendTo(a.$slideTrack),a.reinit())},b.prototype.unload=function(){var b=this;a(".slick-cloned",b.$slider).remove(),b.$dots&&b.$dots.remove(),b.$prevArrow&&b.htmlExpr.test(b.options.prevArrow)&&b.$prevArrow.remove(),b.$nextArrow&&b.htmlExpr.test(b.options.nextArrow)&&b.$nextArrow.remove(),b.$slides.removeClass("slick-slide slick-active slick-visible slick-current").attr("aria-hidden","true").css("width","")},b.prototype.unslick=function(a){var b=this;b.$slider.trigger("unslick",[b,a]),b.destroy()},b.prototype.updateArrows=function(){var b,a=this;b=Math.floor(a.options.slidesToShow/2),a.options.arrows===!0&&a.slideCount>a.options.slidesToShow&&!a.options.infinite&&(a.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false"),a.$nextArrow.removeClass("slick-disabled").attr("aria-disabled","false"),0===a.currentSlide?(a.$prevArrow.addClass("slick-disabled").attr("aria-disabled","true"),a.$nextArrow.removeClass("slick-disabled").attr("aria-disabled","false")):a.currentSlide>=a.slideCount-a.options.slidesToShow&&a.options.centerMode===!1?(a.$nextArrow.addClass("slick-disabled").attr("aria-disabled","true"),a.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false")):a.currentSlide>=a.slideCount-1&&a.options.centerMode===!0&&(a.$nextArrow.addClass("slick-disabled").attr("aria-disabled","true"),a.$prevArrow.removeClass("slick-disabled").attr("aria-disabled","false")))},b.prototype.updateDots=function(){var a=this;null!==a.$dots&&(a.$dots.find("li").removeClass("slick-active").attr("aria-hidden","true"),a.$dots.find("li").eq(Math.floor(a.currentSlide/a.options.slidesToScroll)).addClass("slick-active").attr("aria-hidden","false"))},b.prototype.visibility=function(){var a=this;a.options.autoplay&&(document[a.hidden]?a.interrupted=!0:a.interrupted=!1)},a.fn.slick=function(){var f,g,a=this,c=arguments[0],d=Array.prototype.slice.call(arguments,1),e=a.length;for(f=0;e>f;f++)if("object"==typeof c||"undefined"==typeof c?a[f].slick=new b(a[f],c):g=a[f].slick[c].apply(a[f].slick,d),"undefined"!=typeof g)return g;return a}});
-(function webpackUniversalModuleDefinition(root, factory) {
-	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
-	else if(typeof define === 'function' && define.amd)
-		define([], factory);
-	else if(typeof exports === 'object')
-		exports["shuffle"] = factory();
-	else
-		root["shuffle"] = factory();
-})(this, function() {
-return /******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/*!
+ * Isotope PACKAGED v3.0.1
+ *
+ * Licensed GPLv3 for open source use
+ * or Isotope Commercial License for commercial use
+ *
+ * http://isotope.metafizzy.co
+ * Copyright 2016 Metafizzy
+ */
 
-	'use strict';
-	
-	module.exports = __webpack_require__(1).default;
+!function(t,e){"use strict";"function"==typeof define&&define.amd?define("jquery-bridget/jquery-bridget",["jquery"],function(i){e(t,i)}):"object"==typeof module&&module.exports?module.exports=e(t,require("jquery")):t.jQueryBridget=e(t,t.jQuery)}(window,function(t,e){"use strict";function i(i,s,a){function u(t,e,n){var o,s="$()."+i+'("'+e+'")';return t.each(function(t,u){var h=a.data(u,i);if(!h)return void r(i+" not initialized. Cannot call methods, i.e. "+s);var d=h[e];if(!d||"_"==e.charAt(0))return void r(s+" is not a valid method");var l=d.apply(h,n);o=void 0===o?l:o}),void 0!==o?o:t}function h(t,e){t.each(function(t,n){var o=a.data(n,i);o?(o.option(e),o._init()):(o=new s(n,e),a.data(n,i,o))})}a=a||e||t.jQuery,a&&(s.prototype.option||(s.prototype.option=function(t){a.isPlainObject(t)&&(this.options=a.extend(!0,this.options,t))}),a.fn[i]=function(t){if("string"==typeof t){var e=o.call(arguments,1);return u(this,t,e)}return h(this,t),this},n(a))}function n(t){!t||t&&t.bridget||(t.bridget=i)}var o=Array.prototype.slice,s=t.console,r="undefined"==typeof s?function(){}:function(t){s.error(t)};return n(e||t.jQuery),i}),function(t,e){"function"==typeof define&&define.amd?define("ev-emitter/ev-emitter",e):"object"==typeof module&&module.exports?module.exports=e():t.EvEmitter=e()}("undefined"!=typeof window?window:this,function(){function t(){}var e=t.prototype;return e.on=function(t,e){if(t&&e){var i=this._events=this._events||{},n=i[t]=i[t]||[];return-1==n.indexOf(e)&&n.push(e),this}},e.once=function(t,e){if(t&&e){this.on(t,e);var i=this._onceEvents=this._onceEvents||{},n=i[t]=i[t]||{};return n[e]=!0,this}},e.off=function(t,e){var i=this._events&&this._events[t];if(i&&i.length){var n=i.indexOf(e);return-1!=n&&i.splice(n,1),this}},e.emitEvent=function(t,e){var i=this._events&&this._events[t];if(i&&i.length){var n=0,o=i[n];e=e||[];for(var s=this._onceEvents&&this._onceEvents[t];o;){var r=s&&s[o];r&&(this.off(t,o),delete s[o]),o.apply(this,e),n+=r?0:1,o=i[n]}return this}},t}),function(t,e){"use strict";"function"==typeof define&&define.amd?define("get-size/get-size",[],function(){return e()}):"object"==typeof module&&module.exports?module.exports=e():t.getSize=e()}(window,function(){"use strict";function t(t){var e=parseFloat(t),i=-1==t.indexOf("%")&&!isNaN(e);return i&&e}function e(){}function i(){for(var t={width:0,height:0,innerWidth:0,innerHeight:0,outerWidth:0,outerHeight:0},e=0;h>e;e++){var i=u[e];t[i]=0}return t}function n(t){var e=getComputedStyle(t);return e||a("Style returned "+e+". Are you running this code in a hidden iframe on Firefox? See http://bit.ly/getsizebug1"),e}function o(){if(!d){d=!0;var e=document.createElement("div");e.style.width="200px",e.style.padding="1px 2px 3px 4px",e.style.borderStyle="solid",e.style.borderWidth="1px 2px 3px 4px",e.style.boxSizing="border-box";var i=document.body||document.documentElement;i.appendChild(e);var o=n(e);s.isBoxSizeOuter=r=200==t(o.width),i.removeChild(e)}}function s(e){if(o(),"string"==typeof e&&(e=document.querySelector(e)),e&&"object"==typeof e&&e.nodeType){var s=n(e);if("none"==s.display)return i();var a={};a.width=e.offsetWidth,a.height=e.offsetHeight;for(var d=a.isBorderBox="border-box"==s.boxSizing,l=0;h>l;l++){var f=u[l],c=s[f],m=parseFloat(c);a[f]=isNaN(m)?0:m}var p=a.paddingLeft+a.paddingRight,y=a.paddingTop+a.paddingBottom,g=a.marginLeft+a.marginRight,v=a.marginTop+a.marginBottom,_=a.borderLeftWidth+a.borderRightWidth,I=a.borderTopWidth+a.borderBottomWidth,z=d&&r,x=t(s.width);x!==!1&&(a.width=x+(z?0:p+_));var S=t(s.height);return S!==!1&&(a.height=S+(z?0:y+I)),a.innerWidth=a.width-(p+_),a.innerHeight=a.height-(y+I),a.outerWidth=a.width+g,a.outerHeight=a.height+v,a}}var r,a="undefined"==typeof console?e:function(t){console.error(t)},u=["paddingLeft","paddingRight","paddingTop","paddingBottom","marginLeft","marginRight","marginTop","marginBottom","borderLeftWidth","borderRightWidth","borderTopWidth","borderBottomWidth"],h=u.length,d=!1;return s}),function(t,e){"use strict";"function"==typeof define&&define.amd?define("desandro-matches-selector/matches-selector",e):"object"==typeof module&&module.exports?module.exports=e():t.matchesSelector=e()}(window,function(){"use strict";var t=function(){var t=Element.prototype;if(t.matches)return"matches";if(t.matchesSelector)return"matchesSelector";for(var e=["webkit","moz","ms","o"],i=0;i<e.length;i++){var n=e[i],o=n+"MatchesSelector";if(t[o])return o}}();return function(e,i){return e[t](i)}}),function(t,e){"function"==typeof define&&define.amd?define("fizzy-ui-utils/utils",["desandro-matches-selector/matches-selector"],function(i){return e(t,i)}):"object"==typeof module&&module.exports?module.exports=e(t,require("desandro-matches-selector")):t.fizzyUIUtils=e(t,t.matchesSelector)}(window,function(t,e){var i={};i.extend=function(t,e){for(var i in e)t[i]=e[i];return t},i.modulo=function(t,e){return(t%e+e)%e},i.makeArray=function(t){var e=[];if(Array.isArray(t))e=t;else if(t&&"number"==typeof t.length)for(var i=0;i<t.length;i++)e.push(t[i]);else e.push(t);return e},i.removeFrom=function(t,e){var i=t.indexOf(e);-1!=i&&t.splice(i,1)},i.getParent=function(t,i){for(;t!=document.body;)if(t=t.parentNode,e(t,i))return t},i.getQueryElement=function(t){return"string"==typeof t?document.querySelector(t):t},i.handleEvent=function(t){var e="on"+t.type;this[e]&&this[e](t)},i.filterFindElements=function(t,n){t=i.makeArray(t);var o=[];return t.forEach(function(t){if(t instanceof HTMLElement){if(!n)return void o.push(t);e(t,n)&&o.push(t);for(var i=t.querySelectorAll(n),s=0;s<i.length;s++)o.push(i[s])}}),o},i.debounceMethod=function(t,e,i){var n=t.prototype[e],o=e+"Timeout";t.prototype[e]=function(){var t=this[o];t&&clearTimeout(t);var e=arguments,s=this;this[o]=setTimeout(function(){n.apply(s,e),delete s[o]},i||100)}},i.docReady=function(t){var e=document.readyState;"complete"==e||"interactive"==e?t():document.addEventListener("DOMContentLoaded",t)},i.toDashed=function(t){return t.replace(/(.)([A-Z])/g,function(t,e,i){return e+"-"+i}).toLowerCase()};var n=t.console;return i.htmlInit=function(e,o){i.docReady(function(){var s=i.toDashed(o),r="data-"+s,a=document.querySelectorAll("["+r+"]"),u=document.querySelectorAll(".js-"+s),h=i.makeArray(a).concat(i.makeArray(u)),d=r+"-options",l=t.jQuery;h.forEach(function(t){var i,s=t.getAttribute(r)||t.getAttribute(d);try{i=s&&JSON.parse(s)}catch(a){return void(n&&n.error("Error parsing "+r+" on "+t.className+": "+a))}var u=new e(t,i);l&&l.data(t,o,u)})})},i}),function(t,e){"function"==typeof define&&define.amd?define("outlayer/item",["ev-emitter/ev-emitter","get-size/get-size"],e):"object"==typeof module&&module.exports?module.exports=e(require("ev-emitter"),require("get-size")):(t.Outlayer={},t.Outlayer.Item=e(t.EvEmitter,t.getSize))}(window,function(t,e){"use strict";function i(t){for(var e in t)return!1;return e=null,!0}function n(t,e){t&&(this.element=t,this.layout=e,this.position={x:0,y:0},this._create())}function o(t){return t.replace(/([A-Z])/g,function(t){return"-"+t.toLowerCase()})}var s=document.documentElement.style,r="string"==typeof s.transition?"transition":"WebkitTransition",a="string"==typeof s.transform?"transform":"WebkitTransform",u={WebkitTransition:"webkitTransitionEnd",transition:"transitionend"}[r],h={transform:a,transition:r,transitionDuration:r+"Duration",transitionProperty:r+"Property",transitionDelay:r+"Delay"},d=n.prototype=Object.create(t.prototype);d.constructor=n,d._create=function(){this._transn={ingProperties:{},clean:{},onEnd:{}},this.css({position:"absolute"})},d.handleEvent=function(t){var e="on"+t.type;this[e]&&this[e](t)},d.getSize=function(){this.size=e(this.element)},d.css=function(t){var e=this.element.style;for(var i in t){var n=h[i]||i;e[n]=t[i]}},d.getPosition=function(){var t=getComputedStyle(this.element),e=this.layout._getOption("originLeft"),i=this.layout._getOption("originTop"),n=t[e?"left":"right"],o=t[i?"top":"bottom"],s=this.layout.size,r=-1!=n.indexOf("%")?parseFloat(n)/100*s.width:parseInt(n,10),a=-1!=o.indexOf("%")?parseFloat(o)/100*s.height:parseInt(o,10);r=isNaN(r)?0:r,a=isNaN(a)?0:a,r-=e?s.paddingLeft:s.paddingRight,a-=i?s.paddingTop:s.paddingBottom,this.position.x=r,this.position.y=a},d.layoutPosition=function(){var t=this.layout.size,e={},i=this.layout._getOption("originLeft"),n=this.layout._getOption("originTop"),o=i?"paddingLeft":"paddingRight",s=i?"left":"right",r=i?"right":"left",a=this.position.x+t[o];e[s]=this.getXValue(a),e[r]="";var u=n?"paddingTop":"paddingBottom",h=n?"top":"bottom",d=n?"bottom":"top",l=this.position.y+t[u];e[h]=this.getYValue(l),e[d]="",this.css(e),this.emitEvent("layout",[this])},d.getXValue=function(t){var e=this.layout._getOption("horizontal");return this.layout.options.percentPosition&&!e?t/this.layout.size.width*100+"%":t+"px"},d.getYValue=function(t){var e=this.layout._getOption("horizontal");return this.layout.options.percentPosition&&e?t/this.layout.size.height*100+"%":t+"px"},d._transitionTo=function(t,e){this.getPosition();var i=this.position.x,n=this.position.y,o=parseInt(t,10),s=parseInt(e,10),r=o===this.position.x&&s===this.position.y;if(this.setPosition(t,e),r&&!this.isTransitioning)return void this.layoutPosition();var a=t-i,u=e-n,h={};h.transform=this.getTranslate(a,u),this.transition({to:h,onTransitionEnd:{transform:this.layoutPosition},isCleaning:!0})},d.getTranslate=function(t,e){var i=this.layout._getOption("originLeft"),n=this.layout._getOption("originTop");return t=i?t:-t,e=n?e:-e,"translate3d("+t+"px, "+e+"px, 0)"},d.goTo=function(t,e){this.setPosition(t,e),this.layoutPosition()},d.moveTo=d._transitionTo,d.setPosition=function(t,e){this.position.x=parseInt(t,10),this.position.y=parseInt(e,10)},d._nonTransition=function(t){this.css(t.to),t.isCleaning&&this._removeStyles(t.to);for(var e in t.onTransitionEnd)t.onTransitionEnd[e].call(this)},d.transition=function(t){if(!parseFloat(this.layout.options.transitionDuration))return void this._nonTransition(t);var e=this._transn;for(var i in t.onTransitionEnd)e.onEnd[i]=t.onTransitionEnd[i];for(i in t.to)e.ingProperties[i]=!0,t.isCleaning&&(e.clean[i]=!0);if(t.from){this.css(t.from);var n=this.element.offsetHeight;n=null}this.enableTransition(t.to),this.css(t.to),this.isTransitioning=!0};var l="opacity,"+o(a);d.enableTransition=function(){if(!this.isTransitioning){var t=this.layout.options.transitionDuration;t="number"==typeof t?t+"ms":t,this.css({transitionProperty:l,transitionDuration:t,transitionDelay:this.staggerDelay||0}),this.element.addEventListener(u,this,!1)}},d.onwebkitTransitionEnd=function(t){this.ontransitionend(t)},d.onotransitionend=function(t){this.ontransitionend(t)};var f={"-webkit-transform":"transform"};d.ontransitionend=function(t){if(t.target===this.element){var e=this._transn,n=f[t.propertyName]||t.propertyName;if(delete e.ingProperties[n],i(e.ingProperties)&&this.disableTransition(),n in e.clean&&(this.element.style[t.propertyName]="",delete e.clean[n]),n in e.onEnd){var o=e.onEnd[n];o.call(this),delete e.onEnd[n]}this.emitEvent("transitionEnd",[this])}},d.disableTransition=function(){this.removeTransitionStyles(),this.element.removeEventListener(u,this,!1),this.isTransitioning=!1},d._removeStyles=function(t){var e={};for(var i in t)e[i]="";this.css(e)};var c={transitionProperty:"",transitionDuration:"",transitionDelay:""};return d.removeTransitionStyles=function(){this.css(c)},d.stagger=function(t){t=isNaN(t)?0:t,this.staggerDelay=t+"ms"},d.removeElem=function(){this.element.parentNode.removeChild(this.element),this.css({display:""}),this.emitEvent("remove",[this])},d.remove=function(){return r&&parseFloat(this.layout.options.transitionDuration)?(this.once("transitionEnd",function(){this.removeElem()}),void this.hide()):void this.removeElem()},d.reveal=function(){delete this.isHidden,this.css({display:""});var t=this.layout.options,e={},i=this.getHideRevealTransitionEndProperty("visibleStyle");e[i]=this.onRevealTransitionEnd,this.transition({from:t.hiddenStyle,to:t.visibleStyle,isCleaning:!0,onTransitionEnd:e})},d.onRevealTransitionEnd=function(){this.isHidden||this.emitEvent("reveal")},d.getHideRevealTransitionEndProperty=function(t){var e=this.layout.options[t];if(e.opacity)return"opacity";for(var i in e)return i},d.hide=function(){this.isHidden=!0,this.css({display:""});var t=this.layout.options,e={},i=this.getHideRevealTransitionEndProperty("hiddenStyle");e[i]=this.onHideTransitionEnd,this.transition({from:t.visibleStyle,to:t.hiddenStyle,isCleaning:!0,onTransitionEnd:e})},d.onHideTransitionEnd=function(){this.isHidden&&(this.css({display:"none"}),this.emitEvent("hide"))},d.destroy=function(){this.css({position:"",left:"",right:"",top:"",bottom:"",transition:"",transform:""})},n}),function(t,e){"use strict";"function"==typeof define&&define.amd?define("outlayer/outlayer",["ev-emitter/ev-emitter","get-size/get-size","fizzy-ui-utils/utils","./item"],function(i,n,o,s){return e(t,i,n,o,s)}):"object"==typeof module&&module.exports?module.exports=e(t,require("ev-emitter"),require("get-size"),require("fizzy-ui-utils"),require("./item")):t.Outlayer=e(t,t.EvEmitter,t.getSize,t.fizzyUIUtils,t.Outlayer.Item)}(window,function(t,e,i,n,o){"use strict";function s(t,e){var i=n.getQueryElement(t);if(!i)return void(u&&u.error("Bad element for "+this.constructor.namespace+": "+(i||t)));this.element=i,h&&(this.$element=h(this.element)),this.options=n.extend({},this.constructor.defaults),this.option(e);var o=++l;this.element.outlayerGUID=o,f[o]=this,this._create();var s=this._getOption("initLayout");s&&this.layout()}function r(t){function e(){t.apply(this,arguments)}return e.prototype=Object.create(t.prototype),e.prototype.constructor=e,e}function a(t){if("number"==typeof t)return t;var e=t.match(/(^\d*\.?\d*)(\w*)/),i=e&&e[1],n=e&&e[2];if(!i.length)return 0;i=parseFloat(i);var o=m[n]||1;return i*o}var u=t.console,h=t.jQuery,d=function(){},l=0,f={};s.namespace="outlayer",s.Item=o,s.defaults={containerStyle:{position:"relative"},initLayout:!0,originLeft:!0,originTop:!0,resize:!0,resizeContainer:!0,transitionDuration:"0.4s",hiddenStyle:{opacity:0,transform:"scale(0.001)"},visibleStyle:{opacity:1,transform:"scale(1)"}};var c=s.prototype;n.extend(c,e.prototype),c.option=function(t){n.extend(this.options,t)},c._getOption=function(t){var e=this.constructor.compatOptions[t];return e&&void 0!==this.options[e]?this.options[e]:this.options[t]},s.compatOptions={initLayout:"isInitLayout",horizontal:"isHorizontal",layoutInstant:"isLayoutInstant",originLeft:"isOriginLeft",originTop:"isOriginTop",resize:"isResizeBound",resizeContainer:"isResizingContainer"},c._create=function(){this.reloadItems(),this.stamps=[],this.stamp(this.options.stamp),n.extend(this.element.style,this.options.containerStyle);var t=this._getOption("resize");t&&this.bindResize()},c.reloadItems=function(){this.items=this._itemize(this.element.children)},c._itemize=function(t){for(var e=this._filterFindItemElements(t),i=this.constructor.Item,n=[],o=0;o<e.length;o++){var s=e[o],r=new i(s,this);n.push(r)}return n},c._filterFindItemElements=function(t){return n.filterFindElements(t,this.options.itemSelector)},c.getItemElements=function(){return this.items.map(function(t){return t.element})},c.layout=function(){this._resetLayout(),this._manageStamps();var t=this._getOption("layoutInstant"),e=void 0!==t?t:!this._isLayoutInited;this.layoutItems(this.items,e),this._isLayoutInited=!0},c._init=c.layout,c._resetLayout=function(){this.getSize()},c.getSize=function(){this.size=i(this.element)},c._getMeasurement=function(t,e){var n,o=this.options[t];o?("string"==typeof o?n=this.element.querySelector(o):o instanceof HTMLElement&&(n=o),this[t]=n?i(n)[e]:o):this[t]=0},c.layoutItems=function(t,e){t=this._getItemsForLayout(t),this._layoutItems(t,e),this._postLayout()},c._getItemsForLayout=function(t){return t.filter(function(t){return!t.isIgnored})},c._layoutItems=function(t,e){if(this._emitCompleteOnItems("layout",t),t&&t.length){var i=[];t.forEach(function(t){var n=this._getItemLayoutPosition(t);n.item=t,n.isInstant=e||t.isLayoutInstant,i.push(n)},this),this._processLayoutQueue(i)}},c._getItemLayoutPosition=function(){return{x:0,y:0}},c._processLayoutQueue=function(t){this.updateStagger(),t.forEach(function(t,e){this._positionItem(t.item,t.x,t.y,t.isInstant,e)},this)},c.updateStagger=function(){var t=this.options.stagger;return null===t||void 0===t?void(this.stagger=0):(this.stagger=a(t),this.stagger)},c._positionItem=function(t,e,i,n,o){n?t.goTo(e,i):(t.stagger(o*this.stagger),t.moveTo(e,i))},c._postLayout=function(){this.resizeContainer()},c.resizeContainer=function(){var t=this._getOption("resizeContainer");if(t){var e=this._getContainerSize();e&&(this._setContainerMeasure(e.width,!0),this._setContainerMeasure(e.height,!1))}},c._getContainerSize=d,c._setContainerMeasure=function(t,e){if(void 0!==t){var i=this.size;i.isBorderBox&&(t+=e?i.paddingLeft+i.paddingRight+i.borderLeftWidth+i.borderRightWidth:i.paddingBottom+i.paddingTop+i.borderTopWidth+i.borderBottomWidth),t=Math.max(t,0),this.element.style[e?"width":"height"]=t+"px"}},c._emitCompleteOnItems=function(t,e){function i(){o.dispatchEvent(t+"Complete",null,[e])}function n(){r++,r==s&&i()}var o=this,s=e.length;if(!e||!s)return void i();var r=0;e.forEach(function(e){e.once(t,n)})},c.dispatchEvent=function(t,e,i){var n=e?[e].concat(i):i;if(this.emitEvent(t,n),h)if(this.$element=this.$element||h(this.element),e){var o=h.Event(e);o.type=t,this.$element.trigger(o,i)}else this.$element.trigger(t,i)},c.ignore=function(t){var e=this.getItem(t);e&&(e.isIgnored=!0)},c.unignore=function(t){var e=this.getItem(t);e&&delete e.isIgnored},c.stamp=function(t){t=this._find(t),t&&(this.stamps=this.stamps.concat(t),t.forEach(this.ignore,this))},c.unstamp=function(t){t=this._find(t),t&&t.forEach(function(t){n.removeFrom(this.stamps,t),this.unignore(t)},this)},c._find=function(t){return t?("string"==typeof t&&(t=this.element.querySelectorAll(t)),t=n.makeArray(t)):void 0},c._manageStamps=function(){this.stamps&&this.stamps.length&&(this._getBoundingRect(),this.stamps.forEach(this._manageStamp,this))},c._getBoundingRect=function(){var t=this.element.getBoundingClientRect(),e=this.size;this._boundingRect={left:t.left+e.paddingLeft+e.borderLeftWidth,top:t.top+e.paddingTop+e.borderTopWidth,right:t.right-(e.paddingRight+e.borderRightWidth),bottom:t.bottom-(e.paddingBottom+e.borderBottomWidth)}},c._manageStamp=d,c._getElementOffset=function(t){var e=t.getBoundingClientRect(),n=this._boundingRect,o=i(t),s={left:e.left-n.left-o.marginLeft,top:e.top-n.top-o.marginTop,right:n.right-e.right-o.marginRight,bottom:n.bottom-e.bottom-o.marginBottom};return s},c.handleEvent=n.handleEvent,c.bindResize=function(){t.addEventListener("resize",this),this.isResizeBound=!0},c.unbindResize=function(){t.removeEventListener("resize",this),this.isResizeBound=!1},c.onresize=function(){this.resize()},n.debounceMethod(s,"onresize",100),c.resize=function(){this.isResizeBound&&this.needsResizeLayout()&&this.layout()},c.needsResizeLayout=function(){var t=i(this.element),e=this.size&&t;return e&&t.innerWidth!==this.size.innerWidth},c.addItems=function(t){var e=this._itemize(t);return e.length&&(this.items=this.items.concat(e)),e},c.appended=function(t){var e=this.addItems(t);e.length&&(this.layoutItems(e,!0),this.reveal(e))},c.prepended=function(t){var e=this._itemize(t);if(e.length){var i=this.items.slice(0);this.items=e.concat(i),this._resetLayout(),this._manageStamps(),this.layoutItems(e,!0),this.reveal(e),this.layoutItems(i)}},c.reveal=function(t){if(this._emitCompleteOnItems("reveal",t),t&&t.length){var e=this.updateStagger();t.forEach(function(t,i){t.stagger(i*e),t.reveal()})}},c.hide=function(t){if(this._emitCompleteOnItems("hide",t),t&&t.length){var e=this.updateStagger();t.forEach(function(t,i){t.stagger(i*e),t.hide()})}},c.revealItemElements=function(t){var e=this.getItems(t);this.reveal(e)},c.hideItemElements=function(t){var e=this.getItems(t);this.hide(e)},c.getItem=function(t){for(var e=0;e<this.items.length;e++){var i=this.items[e];if(i.element==t)return i}},c.getItems=function(t){t=n.makeArray(t);var e=[];return t.forEach(function(t){var i=this.getItem(t);i&&e.push(i)},this),e},c.remove=function(t){var e=this.getItems(t);this._emitCompleteOnItems("remove",e),e&&e.length&&e.forEach(function(t){t.remove(),n.removeFrom(this.items,t)},this)},c.destroy=function(){var t=this.element.style;t.height="",t.position="",t.width="",this.items.forEach(function(t){t.destroy()}),this.unbindResize();var e=this.element.outlayerGUID;delete f[e],delete this.element.outlayerGUID,h&&h.removeData(this.element,this.constructor.namespace)},s.data=function(t){t=n.getQueryElement(t);var e=t&&t.outlayerGUID;return e&&f[e]},s.create=function(t,e){var i=r(s);return i.defaults=n.extend({},s.defaults),n.extend(i.defaults,e),i.compatOptions=n.extend({},s.compatOptions),i.namespace=t,i.data=s.data,i.Item=r(o),n.htmlInit(i,t),h&&h.bridget&&h.bridget(t,i),i};var m={ms:1,s:1e3};return s.Item=o,s}),function(t,e){"function"==typeof define&&define.amd?define("isotope/js/item",["outlayer/outlayer"],e):"object"==typeof module&&module.exports?module.exports=e(require("outlayer")):(t.Isotope=t.Isotope||{},t.Isotope.Item=e(t.Outlayer))}(window,function(t){"use strict";function e(){t.Item.apply(this,arguments)}var i=e.prototype=Object.create(t.Item.prototype),n=i._create;i._create=function(){this.id=this.layout.itemGUID++,n.call(this),this.sortData={}},i.updateSortData=function(){if(!this.isIgnored){this.sortData.id=this.id,this.sortData["original-order"]=this.id,this.sortData.random=Math.random();var t=this.layout.options.getSortData,e=this.layout._sorters;for(var i in t){var n=e[i];this.sortData[i]=n(this.element,this)}}};var o=i.destroy;return i.destroy=function(){o.apply(this,arguments),this.css({display:""})},e}),function(t,e){"function"==typeof define&&define.amd?define("isotope/js/layout-mode",["get-size/get-size","outlayer/outlayer"],e):"object"==typeof module&&module.exports?module.exports=e(require("get-size"),require("outlayer")):(t.Isotope=t.Isotope||{},t.Isotope.LayoutMode=e(t.getSize,t.Outlayer))}(window,function(t,e){"use strict";function i(t){this.isotope=t,t&&(this.options=t.options[this.namespace],this.element=t.element,this.items=t.filteredItems,this.size=t.size)}var n=i.prototype,o=["_resetLayout","_getItemLayoutPosition","_manageStamp","_getContainerSize","_getElementOffset","needsResizeLayout","_getOption"];return o.forEach(function(t){n[t]=function(){return e.prototype[t].apply(this.isotope,arguments)}}),n.needsVerticalResizeLayout=function(){var e=t(this.isotope.element),i=this.isotope.size&&e;return i&&e.innerHeight!=this.isotope.size.innerHeight},n._getMeasurement=function(){this.isotope._getMeasurement.apply(this,arguments)},n.getColumnWidth=function(){this.getSegmentSize("column","Width")},n.getRowHeight=function(){this.getSegmentSize("row","Height")},n.getSegmentSize=function(t,e){var i=t+e,n="outer"+e;if(this._getMeasurement(i,n),!this[i]){var o=this.getFirstItemSize();this[i]=o&&o[n]||this.isotope.size["inner"+e]}},n.getFirstItemSize=function(){var e=this.isotope.filteredItems[0];return e&&e.element&&t(e.element)},n.layout=function(){this.isotope.layout.apply(this.isotope,arguments)},n.getSize=function(){this.isotope.getSize(),this.size=this.isotope.size},i.modes={},i.create=function(t,e){function o(){i.apply(this,arguments)}return o.prototype=Object.create(n),o.prototype.constructor=o,e&&(o.options=e),o.prototype.namespace=t,i.modes[t]=o,o},i}),function(t,e){"function"==typeof define&&define.amd?define("masonry/masonry",["outlayer/outlayer","get-size/get-size"],e):"object"==typeof module&&module.exports?module.exports=e(require("outlayer"),require("get-size")):t.Masonry=e(t.Outlayer,t.getSize)}(window,function(t,e){var i=t.create("masonry");return i.compatOptions.fitWidth="isFitWidth",i.prototype._resetLayout=function(){this.getSize(),this._getMeasurement("columnWidth","outerWidth"),this._getMeasurement("gutter","outerWidth"),this.measureColumns(),this.colYs=[];for(var t=0;t<this.cols;t++)this.colYs.push(0);this.maxY=0},i.prototype.measureColumns=function(){if(this.getContainerWidth(),!this.columnWidth){var t=this.items[0],i=t&&t.element;this.columnWidth=i&&e(i).outerWidth||this.containerWidth}var n=this.columnWidth+=this.gutter,o=this.containerWidth+this.gutter,s=o/n,r=n-o%n,a=r&&1>r?"round":"floor";s=Math[a](s),this.cols=Math.max(s,1)},i.prototype.getContainerWidth=function(){var t=this._getOption("fitWidth"),i=t?this.element.parentNode:this.element,n=e(i);this.containerWidth=n&&n.innerWidth},i.prototype._getItemLayoutPosition=function(t){t.getSize();var e=t.size.outerWidth%this.columnWidth,i=e&&1>e?"round":"ceil",n=Math[i](t.size.outerWidth/this.columnWidth);n=Math.min(n,this.cols);for(var o=this._getColGroup(n),s=Math.min.apply(Math,o),r=o.indexOf(s),a={x:this.columnWidth*r,y:s},u=s+t.size.outerHeight,h=this.cols+1-o.length,d=0;h>d;d++)this.colYs[r+d]=u;return a},i.prototype._getColGroup=function(t){if(2>t)return this.colYs;for(var e=[],i=this.cols+1-t,n=0;i>n;n++){var o=this.colYs.slice(n,n+t);e[n]=Math.max.apply(Math,o)}return e},i.prototype._manageStamp=function(t){var i=e(t),n=this._getElementOffset(t),o=this._getOption("originLeft"),s=o?n.left:n.right,r=s+i.outerWidth,a=Math.floor(s/this.columnWidth);a=Math.max(0,a);var u=Math.floor(r/this.columnWidth);u-=r%this.columnWidth?0:1,u=Math.min(this.cols-1,u);for(var h=this._getOption("originTop"),d=(h?n.top:n.bottom)+i.outerHeight,l=a;u>=l;l++)this.colYs[l]=Math.max(d,this.colYs[l])},i.prototype._getContainerSize=function(){this.maxY=Math.max.apply(Math,this.colYs);var t={height:this.maxY};return this._getOption("fitWidth")&&(t.width=this._getContainerFitWidth()),t},i.prototype._getContainerFitWidth=function(){for(var t=0,e=this.cols;--e&&0===this.colYs[e];)t++;return(this.cols-t)*this.columnWidth-this.gutter},i.prototype.needsResizeLayout=function(){var t=this.containerWidth;return this.getContainerWidth(),t!=this.containerWidth},i}),function(t,e){"function"==typeof define&&define.amd?define("isotope/js/layout-modes/masonry",["../layout-mode","masonry/masonry"],e):"object"==typeof module&&module.exports?module.exports=e(require("../layout-mode"),require("masonry-layout")):e(t.Isotope.LayoutMode,t.Masonry)}(window,function(t,e){"use strict";var i=t.create("masonry"),n=i.prototype,o={_getElementOffset:!0,layout:!0,_getMeasurement:!0};for(var s in e.prototype)o[s]||(n[s]=e.prototype[s]);var r=n.measureColumns;n.measureColumns=function(){this.items=this.isotope.filteredItems,r.call(this)};var a=n._getOption;return n._getOption=function(t){return"fitWidth"==t?void 0!==this.options.isFitWidth?this.options.isFitWidth:this.options.fitWidth:a.apply(this.isotope,arguments)},i}),function(t,e){"function"==typeof define&&define.amd?define("isotope/js/layout-modes/fit-rows",["../layout-mode"],e):"object"==typeof exports?module.exports=e(require("../layout-mode")):e(t.Isotope.LayoutMode)}(window,function(t){"use strict";var e=t.create("fitRows"),i=e.prototype;return i._resetLayout=function(){this.x=0,this.y=0,this.maxY=0,this._getMeasurement("gutter","outerWidth")},i._getItemLayoutPosition=function(t){t.getSize();var e=t.size.outerWidth+this.gutter,i=this.isotope.size.innerWidth+this.gutter;0!==this.x&&e+this.x>i&&(this.x=0,this.y=this.maxY);var n={x:this.x,y:this.y};return this.maxY=Math.max(this.maxY,this.y+t.size.outerHeight),this.x+=e,n},i._getContainerSize=function(){return{height:this.maxY}},e}),function(t,e){"function"==typeof define&&define.amd?define("isotope/js/layout-modes/vertical",["../layout-mode"],e):"object"==typeof module&&module.exports?module.exports=e(require("../layout-mode")):e(t.Isotope.LayoutMode)}(window,function(t){"use strict";var e=t.create("vertical",{horizontalAlignment:0}),i=e.prototype;return i._resetLayout=function(){this.y=0},i._getItemLayoutPosition=function(t){t.getSize();var e=(this.isotope.size.innerWidth-t.size.outerWidth)*this.options.horizontalAlignment,i=this.y;return this.y+=t.size.outerHeight,{x:e,y:i}},i._getContainerSize=function(){return{height:this.y}},e}),function(t,e){"function"==typeof define&&define.amd?define(["outlayer/outlayer","get-size/get-size","desandro-matches-selector/matches-selector","fizzy-ui-utils/utils","isotope/js/item","isotope/js/layout-mode","isotope/js/layout-modes/masonry","isotope/js/layout-modes/fit-rows","isotope/js/layout-modes/vertical"],function(i,n,o,s,r,a){return e(t,i,n,o,s,r,a)}):"object"==typeof module&&module.exports?module.exports=e(t,require("outlayer"),require("get-size"),require("desandro-matches-selector"),require("fizzy-ui-utils"),require("isotope/js/item"),require("isotope/js/layout-mode"),require("isotope/js/layout-modes/masonry"),require("isotope/js/layout-modes/fit-rows"),require("isotope/js/layout-modes/vertical")):t.Isotope=e(t,t.Outlayer,t.getSize,t.matchesSelector,t.fizzyUIUtils,t.Isotope.Item,t.Isotope.LayoutMode)}(window,function(t,e,i,n,o,s,r){function a(t,e){return function(i,n){for(var o=0;o<t.length;o++){var s=t[o],r=i.sortData[s],a=n.sortData[s];if(r>a||a>r){var u=void 0!==e[s]?e[s]:e,h=u?1:-1;return(r>a?1:-1)*h}}return 0}}var u=t.jQuery,h=String.prototype.trim?function(t){return t.trim()}:function(t){return t.replace(/^\s+|\s+$/g,"")},d=e.create("isotope",{layoutMode:"masonry",isJQueryFiltering:!0,sortAscending:!0});d.Item=s,d.LayoutMode=r;var l=d.prototype;l._create=function(){this.itemGUID=0,this._sorters={},this._getSorters(),e.prototype._create.call(this),this.modes={},this.filteredItems=this.items,this.sortHistory=["original-order"];for(var t in r.modes)this._initLayoutMode(t)},l.reloadItems=function(){this.itemGUID=0,e.prototype.reloadItems.call(this)},l._itemize=function(){for(var t=e.prototype._itemize.apply(this,arguments),i=0;i<t.length;i++){var n=t[i];n.id=this.itemGUID++}return this._updateItemsSortData(t),t},l._initLayoutMode=function(t){var e=r.modes[t],i=this.options[t]||{};this.options[t]=e.options?o.extend(e.options,i):i,this.modes[t]=new e(this)},l.layout=function(){return!this._isLayoutInited&&this._getOption("initLayout")?void this.arrange():void this._layout()},l._layout=function(){var t=this._getIsInstant();this._resetLayout(),this._manageStamps(),this.layoutItems(this.filteredItems,t),this._isLayoutInited=!0},l.arrange=function(t){this.option(t),this._getIsInstant();var e=this._filter(this.items);this.filteredItems=e.matches,this._bindArrangeComplete(),this._isInstant?this._noTransition(this._hideReveal,[e]):this._hideReveal(e),this._sort(),this._layout()},l._init=l.arrange,l._hideReveal=function(t){this.reveal(t.needReveal),this.hide(t.needHide)},l._getIsInstant=function(){var t=this._getOption("layoutInstant"),e=void 0!==t?t:!this._isLayoutInited;return this._isInstant=e,e},l._bindArrangeComplete=function(){function t(){e&&i&&n&&o.dispatchEvent("arrangeComplete",null,[o.filteredItems])}var e,i,n,o=this;this.once("layoutComplete",function(){e=!0,t()}),this.once("hideComplete",function(){i=!0,t()}),this.once("revealComplete",function(){n=!0,t()})},l._filter=function(t){var e=this.options.filter;e=e||"*";for(var i=[],n=[],o=[],s=this._getFilterTest(e),r=0;r<t.length;r++){var a=t[r];if(!a.isIgnored){var u=s(a);u&&i.push(a),u&&a.isHidden?n.push(a):u||a.isHidden||o.push(a)}}return{matches:i,needReveal:n,needHide:o}},l._getFilterTest=function(t){return u&&this.options.isJQueryFiltering?function(e){return u(e.element).is(t)}:"function"==typeof t?function(e){return t(e.element)}:function(e){return n(e.element,t)}},l.updateSortData=function(t){var e;t?(t=o.makeArray(t),e=this.getItems(t)):e=this.items,this._getSorters(),this._updateItemsSortData(e)},l._getSorters=function(){var t=this.options.getSortData;for(var e in t){var i=t[e];this._sorters[e]=f(i)}},l._updateItemsSortData=function(t){for(var e=t&&t.length,i=0;e&&e>i;i++){var n=t[i];n.updateSortData()}};var f=function(){function t(t){if("string"!=typeof t)return t;var i=h(t).split(" "),n=i[0],o=n.match(/^\[(.+)\]$/),s=o&&o[1],r=e(s,n),a=d.sortDataParsers[i[1]];
+return t=a?function(t){return t&&a(r(t))}:function(t){return t&&r(t)}}function e(t,e){return t?function(e){return e.getAttribute(t)}:function(t){var i=t.querySelector(e);return i&&i.textContent}}return t}();d.sortDataParsers={parseInt:function(t){return parseInt(t,10)},parseFloat:function(t){return parseFloat(t)}},l._sort=function(){var t=this.options.sortBy;if(t){var e=[].concat.apply(t,this.sortHistory),i=a(e,this.options.sortAscending);this.filteredItems.sort(i),t!=this.sortHistory[0]&&this.sortHistory.unshift(t)}},l._mode=function(){var t=this.options.layoutMode,e=this.modes[t];if(!e)throw new Error("No layout mode: "+t);return e.options=this.options[t],e},l._resetLayout=function(){e.prototype._resetLayout.call(this),this._mode()._resetLayout()},l._getItemLayoutPosition=function(t){return this._mode()._getItemLayoutPosition(t)},l._manageStamp=function(t){this._mode()._manageStamp(t)},l._getContainerSize=function(){return this._mode()._getContainerSize()},l.needsResizeLayout=function(){return this._mode().needsResizeLayout()},l.appended=function(t){var e=this.addItems(t);if(e.length){var i=this._filterRevealAdded(e);this.filteredItems=this.filteredItems.concat(i)}},l.prepended=function(t){var e=this._itemize(t);if(e.length){this._resetLayout(),this._manageStamps();var i=this._filterRevealAdded(e);this.layoutItems(this.filteredItems),this.filteredItems=i.concat(this.filteredItems),this.items=e.concat(this.items)}},l._filterRevealAdded=function(t){var e=this._filter(t);return this.hide(e.needHide),this.reveal(e.matches),this.layoutItems(e.matches,!0),e.matches},l.insert=function(t){var e=this.addItems(t);if(e.length){var i,n,o=e.length;for(i=0;o>i;i++)n=e[i],this.element.appendChild(n.element);var s=this._filter(e).matches;for(i=0;o>i;i++)e[i].isLayoutInstant=!0;for(this.arrange(),i=0;o>i;i++)delete e[i].isLayoutInstant;this.reveal(s)}};var c=l.remove;return l.remove=function(t){t=o.makeArray(t);var e=this.getItems(t);c.call(this,t);for(var i=e&&e.length,n=0;i&&i>n;n++){var s=e[n];o.removeFrom(this.filteredItems,s)}},l.shuffle=function(){for(var t=0;t<this.items.length;t++){var e=this.items[t];e.sortData.random=Math.random()}this.options.sortBy="random",this._sort(),this._layout()},l._noTransition=function(t,e){var i=this.options.transitionDuration;this.options.transitionDuration=0;var n=t.apply(this,e);return this.options.transitionDuration=i,n},l.getFilteredItemElements=function(){return this.filteredItems.map(function(t){return t.element})},d});
+/*! WOW - v1.1.2 - 2015-04-07
+* Copyright (c) 2015 Matthieu Aussaguel; Licensed MIT */(function(){var a,b,c,d,e,f=function(a,b){return function(){return a.apply(b,arguments)}},g=[].indexOf||function(a){for(var b=0,c=this.length;c>b;b++)if(b in this&&this[b]===a)return b;return-1};b=function(){function a(){}return a.prototype.extend=function(a,b){var c,d;for(c in b)d=b[c],null==a[c]&&(a[c]=d);return a},a.prototype.isMobile=function(a){return/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(a)},a.prototype.createEvent=function(a,b,c,d){var e;return null==b&&(b=!1),null==c&&(c=!1),null==d&&(d=null),null!=document.createEvent?(e=document.createEvent("CustomEvent"),e.initCustomEvent(a,b,c,d)):null!=document.createEventObject?(e=document.createEventObject(),e.eventType=a):e.eventName=a,e},a.prototype.emitEvent=function(a,b){return null!=a.dispatchEvent?a.dispatchEvent(b):b in(null!=a)?a[b]():"on"+b in(null!=a)?a["on"+b]():void 0},a.prototype.addEvent=function(a,b,c){return null!=a.addEventListener?a.addEventListener(b,c,!1):null!=a.attachEvent?a.attachEvent("on"+b,c):a[b]=c},a.prototype.removeEvent=function(a,b,c){return null!=a.removeEventListener?a.removeEventListener(b,c,!1):null!=a.detachEvent?a.detachEvent("on"+b,c):delete a[b]},a.prototype.innerHeight=function(){return"innerHeight"in window?window.innerHeight:document.documentElement.clientHeight},a}(),c=this.WeakMap||this.MozWeakMap||(c=function(){function a(){this.keys=[],this.values=[]}return a.prototype.get=function(a){var b,c,d,e,f;for(f=this.keys,b=d=0,e=f.length;e>d;b=++d)if(c=f[b],c===a)return this.values[b]},a.prototype.set=function(a,b){var c,d,e,f,g;for(g=this.keys,c=e=0,f=g.length;f>e;c=++e)if(d=g[c],d===a)return void(this.values[c]=b);return this.keys.push(a),this.values.push(b)},a}()),a=this.MutationObserver||this.WebkitMutationObserver||this.MozMutationObserver||(a=function(){function a(){"undefined"!=typeof console&&null!==console&&console.warn("MutationObserver is not supported by your browser."),"undefined"!=typeof console&&null!==console&&console.warn("WOW.js cannot detect dom mutations, please call .sync() after loading new content.")}return a.notSupported=!0,a.prototype.observe=function(){},a}()),d=this.getComputedStyle||function(a){return this.getPropertyValue=function(b){var c;return"float"===b&&(b="styleFloat"),e.test(b)&&b.replace(e,function(a,b){return b.toUpperCase()}),(null!=(c=a.currentStyle)?c[b]:void 0)||null},this},e=/(\-([a-z]){1})/g,this.WOW=function(){function e(a){null==a&&(a={}),this.scrollCallback=f(this.scrollCallback,this),this.scrollHandler=f(this.scrollHandler,this),this.resetAnimation=f(this.resetAnimation,this),this.start=f(this.start,this),this.scrolled=!0,this.config=this.util().extend(a,this.defaults),this.animationNameCache=new c,this.wowEvent=this.util().createEvent(this.config.boxClass)}return e.prototype.defaults={boxClass:"wow",animateClass:"animated",offset:0,mobile:!0,live:!0,callback:null},e.prototype.init=function(){var a;return this.element=window.document.documentElement,"interactive"===(a=document.readyState)||"complete"===a?this.start():this.util().addEvent(document,"DOMContentLoaded",this.start),this.finished=[]},e.prototype.start=function(){var b,c,d,e;if(this.stopped=!1,this.boxes=function(){var a,c,d,e;for(d=this.element.querySelectorAll("."+this.config.boxClass),e=[],a=0,c=d.length;c>a;a++)b=d[a],e.push(b);return e}.call(this),this.all=function(){var a,c,d,e;for(d=this.boxes,e=[],a=0,c=d.length;c>a;a++)b=d[a],e.push(b);return e}.call(this),this.boxes.length)if(this.disabled())this.resetStyle();else for(e=this.boxes,c=0,d=e.length;d>c;c++)b=e[c],this.applyStyle(b,!0);return this.disabled()||(this.util().addEvent(window,"scroll",this.scrollHandler),this.util().addEvent(window,"resize",this.scrollHandler),this.interval=setInterval(this.scrollCallback,50)),this.config.live?new a(function(a){return function(b){var c,d,e,f,g;for(g=[],c=0,d=b.length;d>c;c++)f=b[c],g.push(function(){var a,b,c,d;for(c=f.addedNodes||[],d=[],a=0,b=c.length;b>a;a++)e=c[a],d.push(this.doSync(e));return d}.call(a));return g}}(this)).observe(document.body,{childList:!0,subtree:!0}):void 0},e.prototype.stop=function(){return this.stopped=!0,this.util().removeEvent(window,"scroll",this.scrollHandler),this.util().removeEvent(window,"resize",this.scrollHandler),null!=this.interval?clearInterval(this.interval):void 0},e.prototype.sync=function(){return a.notSupported?this.doSync(this.element):void 0},e.prototype.doSync=function(a){var b,c,d,e,f;if(null==a&&(a=this.element),1===a.nodeType){for(a=a.parentNode||a,e=a.querySelectorAll("."+this.config.boxClass),f=[],c=0,d=e.length;d>c;c++)b=e[c],g.call(this.all,b)<0?(this.boxes.push(b),this.all.push(b),this.stopped||this.disabled()?this.resetStyle():this.applyStyle(b,!0),f.push(this.scrolled=!0)):f.push(void 0);return f}},e.prototype.show=function(a){return this.applyStyle(a),a.className=a.className+" "+this.config.animateClass,null!=this.config.callback&&this.config.callback(a),this.util().emitEvent(a,this.wowEvent),this.util().addEvent(a,"animationend",this.resetAnimation),this.util().addEvent(a,"oanimationend",this.resetAnimation),this.util().addEvent(a,"webkitAnimationEnd",this.resetAnimation),this.util().addEvent(a,"MSAnimationEnd",this.resetAnimation),a},e.prototype.applyStyle=function(a,b){var c,d,e;return d=a.getAttribute("data-wow-duration"),c=a.getAttribute("data-wow-delay"),e=a.getAttribute("data-wow-iteration"),this.animate(function(f){return function(){return f.customStyle(a,b,d,c,e)}}(this))},e.prototype.animate=function(){return"requestAnimationFrame"in window?function(a){return window.requestAnimationFrame(a)}:function(a){return a()}}(),e.prototype.resetStyle=function(){var a,b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],e.push(a.style.visibility="visible");return e},e.prototype.resetAnimation=function(a){var b;return a.type.toLowerCase().indexOf("animationend")>=0?(b=a.target||a.srcElement,b.className=b.className.replace(this.config.animateClass,"").trim()):void 0},e.prototype.customStyle=function(a,b,c,d,e){return b&&this.cacheAnimationName(a),a.style.visibility=b?"hidden":"visible",c&&this.vendorSet(a.style,{animationDuration:c}),d&&this.vendorSet(a.style,{animationDelay:d}),e&&this.vendorSet(a.style,{animationIterationCount:e}),this.vendorSet(a.style,{animationName:b?"none":this.cachedAnimationName(a)}),a},e.prototype.vendors=["moz","webkit"],e.prototype.vendorSet=function(a,b){var c,d,e,f;d=[];for(c in b)e=b[c],a[""+c]=e,d.push(function(){var b,d,g,h;for(g=this.vendors,h=[],b=0,d=g.length;d>b;b++)f=g[b],h.push(a[""+f+c.charAt(0).toUpperCase()+c.substr(1)]=e);return h}.call(this));return d},e.prototype.vendorCSS=function(a,b){var c,e,f,g,h,i;for(h=d(a),g=h.getPropertyCSSValue(b),f=this.vendors,c=0,e=f.length;e>c;c++)i=f[c],g=g||h.getPropertyCSSValue("-"+i+"-"+b);return g},e.prototype.animationName=function(a){var b;try{b=this.vendorCSS(a,"animation-name").cssText}catch(c){b=d(a).getPropertyValue("animation-name")}return"none"===b?"":b},e.prototype.cacheAnimationName=function(a){return this.animationNameCache.set(a,this.animationName(a))},e.prototype.cachedAnimationName=function(a){return this.animationNameCache.get(a)},e.prototype.scrollHandler=function(){return this.scrolled=!0},e.prototype.scrollCallback=function(){var a;return!this.scrolled||(this.scrolled=!1,this.boxes=function(){var b,c,d,e;for(d=this.boxes,e=[],b=0,c=d.length;c>b;b++)a=d[b],a&&(this.isVisible(a)?this.show(a):e.push(a));return e}.call(this),this.boxes.length||this.config.live)?void 0:this.stop()},e.prototype.offsetTop=function(a){for(var b;void 0===a.offsetTop;)a=a.parentNode;for(b=a.offsetTop;a=a.offsetParent;)b+=a.offsetTop;return b},e.prototype.isVisible=function(a){var b,c,d,e,f;return c=a.getAttribute("data-wow-offset")||this.config.offset,f=window.pageYOffset,e=f+Math.min(this.element.clientHeight,this.util().innerHeight())-c,d=this.offsetTop(a),b=d+a.clientHeight,e>=d&&b>=f},e.prototype.util=function(){return null!=this._util?this._util:this._util=new b},e.prototype.disabled=function(){return!this.config.mobile&&this.util().isMobile(navigator.userAgent)},e}()}).call(this);
+function initMap() {
+  var styledMapType = new google.maps.StyledMapType(
+    [
+      {
+        "stylers": [
+          {
+            "hue": "#00aaff"
+          },
+          {
+            "saturation": -100
+          },
+          {
+            "lightness": 12
+          },
+          {
+            "gamma": 2.15
+          }
+        ]
+      },
+      {
+        "featureType": "administrative",
+        "elementType": "labels.text",
+        "stylers": [
+          {
+            "color": "#000000"
+          }
+        ]
+      },
+      {
+        "featureType": "administrative",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "landscape",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {
+            "color": "#eeeeee"
+          }
+        ]
+      },
+      {
+        "featureType": "landscape",
+        "elementType": "labels",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "poi",
+        "elementType": "labels",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.business",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "poi.park",
+        "elementType": "labels.text",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry",
+        "stylers": [
+          {
+            "lightness": 57
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {
+            "color": "#ffffff"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.icon",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.text",
+        "stylers": [
+          {
+            "color": "#000000"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.text.fill",
+        "stylers": [
+          {
+            "lightness": 25
+          },
+          {
+            "visibility": "on"
+          }
+        ]
+      },
+      {
+        "featureType": "road",
+        "elementType": "labels.text.stroke",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "transit",
+        "elementType": "labels",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "geometry.fill",
+        "stylers": [
+          {
+            "color": "#ffca26"
+          }
+        ]
+      },
+      {
+        "featureType": "water",
+        "elementType": "labels",
+        "stylers": [
+          {
+            "visibility": "off"
+          }
+        ]
+      }
+    ],
+    {name: 'Styled Map'});
+  var uluru = {lat: 49.28, lng: -123.1};
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 15,
+    center: uluru,
+    scrollwheel				: false,
+    navigationControl	: false,
+    mapTypeControl		: false,
+    scaleControl			: false,
+    draggable					: false
+  });
 
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
+  var contentString = '<div class="info-window">Alan Smith<br>42nd Avenue 16<br>'+
+                      '<b>Vancouver, BC, Canada</b></div>';
 
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	__webpack_require__(2);
-	
-	var _matchesSelector = __webpack_require__(3);
-	
-	var _matchesSelector2 = _interopRequireDefault(_matchesSelector);
-	
-	var _arrayUniq = __webpack_require__(4);
-	
-	var _arrayUniq2 = _interopRequireDefault(_arrayUniq);
-	
-	var _xtend = __webpack_require__(5);
-	
-	var _xtend2 = _interopRequireDefault(_xtend);
-	
-	var _throttleit = __webpack_require__(6);
-	
-	var _throttleit2 = _interopRequireDefault(_throttleit);
-	
-	var _arrayParallel = __webpack_require__(7);
-	
-	var _arrayParallel2 = _interopRequireDefault(_arrayParallel);
-	
-	var _point = __webpack_require__(8);
-	
-	var _point2 = _interopRequireDefault(_point);
-	
-	var _shuffleItem = __webpack_require__(10);
-	
-	var _shuffleItem2 = _interopRequireDefault(_shuffleItem);
-	
-	var _classes = __webpack_require__(11);
-	
-	var _classes2 = _interopRequireDefault(_classes);
-	
-	var _getNumberStyle = __webpack_require__(12);
-	
-	var _getNumberStyle2 = _interopRequireDefault(_getNumberStyle);
-	
-	var _sorter = __webpack_require__(14);
-	
-	var _sorter2 = _interopRequireDefault(_sorter);
-	
-	var _onTransitionEnd = __webpack_require__(15);
-	
-	var _layout2 = __webpack_require__(16);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	function toArray(arrayLike) {
-	  return Array.prototype.slice.call(arrayLike);
-	}
-	
-	function arrayMax(array) {
-	  return Math.max.apply(Math, array);
-	}
-	
-	function arrayIncludes(array, obj) {
-	  if (arguments.length === 2) {
-	    return arrayIncludes(array)(obj);
-	  }
-	
-	  return function (obj) {
-	    return array.indexOf(obj) > -1;
-	  };
-	}
-	
-	// Used for unique instance variables
-	var id = 0;
-	
-	var Shuffle = function () {
-	
-	  /**
-	   * Categorize, sort, and filter a responsive grid of items.
-	   *
-	   * @param {Element} element An element which is the parent container for the grid items.
-	   * @param {Object} [options=Shuffle.options] Options object.
-	   * @constructor
-	   */
-	  function Shuffle(element) {
-	    var options = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	    _classCallCheck(this, Shuffle);
-	
-	    this.options = (0, _xtend2.default)(Shuffle.options, options);
-	
-	    this.useSizer = false;
-	    this.lastSort = {};
-	    this.group = this.lastFilter = Shuffle.ALL_ITEMS;
-	    this.isEnabled = true;
-	    this.isDestroyed = false;
-	    this.isInitialized = false;
-	    this._transitions = [];
-	    this.isTransitioning = false;
-	    this._queue = [];
-	
-	    element = this._getElementOption(element);
-	
-	    if (!element) {
-	      throw new TypeError('Shuffle needs to be initialized with an element.');
-	    }
-	
-	    this.element = element;
-	    this.id = 'shuffle_' + id++;
-	
-	    this._init();
-	    this.isInitialized = true;
-	  }
-	
-	  _createClass(Shuffle, [{
-	    key: '_init',
-	    value: function _init() {
-	      this.items = this._getItems();
-	
-	      this.options.sizer = this._getElementOption(this.options.sizer);
-	
-	      if (this.options.sizer) {
-	        this.useSizer = true;
-	      }
-	
-	      // Add class and invalidate styles
-	      this.element.classList.add(Shuffle.Classes.BASE);
-	
-	      // Set initial css for each item
-	      this._initItems();
-	
-	      // Bind resize events
-	      this._onResize = this._getResizeFunction();
-	      window.addEventListener('resize', this._onResize);
-	
-	      // Get container css all in one request. Causes reflow
-	      var containerCss = window.getComputedStyle(this.element, null);
-	      var containerWidth = Shuffle.getSize(this.element).width;
-	
-	      // Add styles to the container if it doesn't have them.
-	      this._validateStyles(containerCss);
-	
-	      // We already got the container's width above, no need to cause another
-	      // reflow getting it again... Calculate the number of columns there will be
-	      this._setColumns(containerWidth);
-	
-	      // Kick off!
-	      this.filter(this.options.group, this.options.initialSort);
-	
-	      // The shuffle items haven't had transitions set on them yet so the user
-	      // doesn't see the first layout. Set them now that the first layout is done.
-	      // First, however, a synchronous layout must be caused for the previous
-	      // styles to be applied without transitions.
-	      this.element.offsetWidth; // jshint ignore: line
-	      this._setTransitions();
-	      this.element.style.transition = 'height ' + this.options.speed + 'ms ' + this.options.easing;
-	    }
-	
-	    /**
-	     * Returns a throttled and proxied function for the resize handler.
-	     * @return {Function}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getResizeFunction',
-	    value: function _getResizeFunction() {
-	      var resizeFunction = this._handleResize.bind(this);
-	      return this.options.throttle ? this.options.throttle(resizeFunction, this.options.throttleTime) : resizeFunction;
-	    }
-	
-	    /**
-	     * Retrieve an element from an option.
-	     * @param {string|jQuery|Element} option The option to check.
-	     * @return {?Element} The plain element or null.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getElementOption',
-	    value: function _getElementOption(option) {
-	      // If column width is a string, treat is as a selector and search for the
-	      // sizer element within the outermost container
-	      if (typeof option === 'string') {
-	        return this.element.querySelector(option);
-	
-	        // Check for an element
-	      } else if (option && option.nodeType && option.nodeType === 1) {
-	        return option;
-	
-	        // Check for jQuery object
-	      } else if (option && option.jquery) {
-	        return option[0];
-	      }
-	
-	      return null;
-	    }
-	
-	    /**
-	     * Ensures the shuffle container has the css styles it needs applied to it.
-	     * @param {Object} styles Key value pairs for position and overflow.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_validateStyles',
-	    value: function _validateStyles(styles) {
-	      // Position cannot be static.
-	      if (styles.position === 'static') {
-	        this.element.style.position = 'relative';
-	      }
-	
-	      // Overflow has to be hidden.
-	      if (styles.overflow !== 'hidden') {
-	        this.element.style.overflow = 'hidden';
-	      }
-	    }
-	
-	    /**
-	     * Filter the elements by a category.
-	     * @param {string} [category] Category to filter by. If it's given, the last
-	     *     category will be used to filter the items.
-	     * @param {Array} [collection] Optionally filter a collection. Defaults to
-	     *     all the items.
-	     * @return {!{visible: Array, hidden: Array}}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_filter',
-	    value: function _filter() {
-	      var category = arguments.length <= 0 || arguments[0] === undefined ? this.lastFilter : arguments[0];
-	      var collection = arguments.length <= 1 || arguments[1] === undefined ? this.items : arguments[1];
-	
-	      var set = this._getFilteredSets(category, collection);
-	
-	      // Individually add/remove hidden/visible classes
-	      this._toggleFilterClasses(set);
-	
-	      // Save the last filter in case elements are appended.
-	      this.lastFilter = category;
-	
-	      // This is saved mainly because providing a filter function (like searching)
-	      // will overwrite the `lastFilter` property every time its called.
-	      if (typeof category === 'string') {
-	        this.group = category;
-	      }
-	
-	      return set;
-	    }
-	
-	    /**
-	     * Returns an object containing the visible and hidden elements.
-	     * @param {string|Function} category Category or function to filter by.
-	     * @param {Array.<Element>} items A collection of items to filter.
-	     * @return {!{visible: Array, hidden: Array}}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getFilteredSets',
-	    value: function _getFilteredSets(category, items) {
-	      var _this = this;
-	
-	      var visible = [];
-	      var hidden = [];
-	
-	      // category === 'all', add visible class to everything
-	      if (category === Shuffle.ALL_ITEMS) {
-	        visible = items;
-	
-	        // Loop through each item and use provided function to determine
-	        // whether to hide it or not.
-	      } else {
-	        items.forEach(function (item) {
-	          if (_this._doesPassFilter(category, item.element)) {
-	            visible.push(item);
-	          } else {
-	            hidden.push(item);
-	          }
-	        });
-	      }
-	
-	      return {
-	        visible: visible,
-	        hidden: hidden
-	      };
-	    }
-	
-	    /**
-	     * Test an item to see if it passes a category.
-	     * @param {string|Function} category Category or function to filter by.
-	     * @param {Element} element An element to test.
-	     * @return {boolean} Whether it passes the category/filter.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_doesPassFilter',
-	    value: function _doesPassFilter(category, element) {
-	
-	      if (typeof category === 'function') {
-	        return category.call(element, element, this);
-	
-	        // Check each element's data-groups attribute against the given category.
-	      } else {
-	        var attr = element.getAttribute('data-' + Shuffle.FILTER_ATTRIBUTE_KEY);
-	        var keys = this.options.delimeter ? attr.split(this.options.delimeter) : JSON.parse(attr);
-	
-	        if (Array.isArray(category)) {
-	          return category.some(arrayIncludes(keys));
-	        }
-	
-	        return arrayIncludes(keys, category);
-	      }
-	    }
-	
-	    /**
-	     * Toggles the visible and hidden class names.
-	     * @param {{visible, hidden}} Object with visible and hidden arrays.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_toggleFilterClasses',
-	    value: function _toggleFilterClasses(_ref) {
-	      var visible = _ref.visible;
-	      var hidden = _ref.hidden;
-	
-	      visible.forEach(function (item) {
-	        item.show();
-	      });
-	
-	      hidden.forEach(function (item) {
-	        item.hide();
-	      });
-	    }
-	
-	    /**
-	     * Set the initial css for each item
-	     * @param {Array.<ShuffleItem>} [items] Optionally specifiy at set to initialize.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_initItems',
-	    value: function _initItems() {
-	      var items = arguments.length <= 0 || arguments[0] === undefined ? this.items : arguments[0];
-	
-	      items.forEach(function (item) {
-	        item.init();
-	      });
-	    }
-	
-	    /**
-	     * Remove element reference and styles.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_disposeItems',
-	    value: function _disposeItems() {
-	      var items = arguments.length <= 0 || arguments[0] === undefined ? this.items : arguments[0];
-	
-	      items.forEach(function (item) {
-	        item.dispose();
-	      });
-	    }
-	
-	    /**
-	     * Updates the visible item count.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_updateItemCount',
-	    value: function _updateItemCount() {
-	      this.visibleItems = this._getFilteredItems().length;
-	    }
-	
-	    /**
-	     * Sets css transform transition on a group of elements. This is not executed
-	     * at the same time as `item.init` so that transitions don't occur upon
-	     * initialization of Shuffle.
-	     * @param {Array.<ShuffleItem>} items Shuffle items to set transitions on.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_setTransitions',
-	    value: function _setTransitions() {
-	      var items = arguments.length <= 0 || arguments[0] === undefined ? this.items : arguments[0];
-	
-	      var speed = this.options.speed;
-	      var easing = this.options.easing;
-	
-	      var str;
-	      if (this.options.useTransforms) {
-	        str = 'transform ' + speed + 'ms ' + easing + ', opacity ' + speed + 'ms ' + easing;
-	      } else {
-	        str = 'top ' + speed + 'ms ' + easing + ', left ' + speed + 'ms ' + easing + ', opacity ' + speed + 'ms ' + easing;
-	      }
-	
-	      items.forEach(function (item) {
-	        item.element.style.transition = str;
-	      });
-	    }
-	  }, {
-	    key: '_getItems',
-	    value: function _getItems() {
-	      var _this2 = this;
-	
-	      return toArray(this.element.children).filter(function (el) {
-	        return (0, _matchesSelector2.default)(el, _this2.options.itemSelector);
-	      }).map(function (el) {
-	        return new _shuffleItem2.default(el);
-	      });
-	    }
-	
-	    /**
-	     * When new elements are added to the shuffle container, update the array of
-	     * items because that is the order `_layout` calls them.
-	     */
-	
-	  }, {
-	    key: '_updateItemsOrder',
-	    value: function _updateItemsOrder() {
-	      var children = this.element.children;
-	      this.items = (0, _sorter2.default)(this.items, {
-	        by: function by(element) {
-	          return Array.prototype.indexOf.call(children, element);
-	        }
-	      });
-	    }
-	  }, {
-	    key: '_getFilteredItems',
-	    value: function _getFilteredItems() {
-	      return this.items.filter(function (item) {
-	        return item.isVisible;
-	      });
-	    }
-	  }, {
-	    key: '_getConcealedItems',
-	    value: function _getConcealedItems() {
-	      return this.items.filter(function (item) {
-	        return !item.isVisible;
-	      });
-	    }
-	
-	    /**
-	     * Returns the column size, based on column width and sizer options.
-	     * @param {number} containerWidth Size of the parent container.
-	     * @param {number} gutterSize Size of the gutters.
-	     * @return {number}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getColumnSize',
-	    value: function _getColumnSize(containerWidth, gutterSize) {
-	      var size;
-	
-	      // If the columnWidth property is a function, then the grid is fluid
-	      if (typeof this.options.columnWidth === 'function') {
-	        size = this.options.columnWidth(containerWidth);
-	
-	        // columnWidth option isn't a function, are they using a sizing element?
-	      } else if (this.useSizer) {
-	        size = Shuffle.getSize(this.options.sizer).width;
-	
-	        // if not, how about the explicitly set option?
-	      } else if (this.options.columnWidth) {
-	        size = this.options.columnWidth;
-	
-	        // or use the size of the first item
-	      } else if (this.items.length > 0) {
-	        size = Shuffle.getSize(this.items[0].element, true).width;
-	
-	        // if there's no items, use size of container
-	      } else {
-	        size = containerWidth;
-	      }
-	
-	      // Don't let them set a column width of zero.
-	      if (size === 0) {
-	        size = containerWidth;
-	      }
-	
-	      return size + gutterSize;
-	    }
-	
-	    /**
-	     * Returns the gutter size, based on gutter width and sizer options.
-	     * @param {number} containerWidth Size of the parent container.
-	     * @return {number}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getGutterSize',
-	    value: function _getGutterSize(containerWidth) {
-	      var size;
-	      if (typeof this.options.gutterWidth === 'function') {
-	        size = this.options.gutterWidth(containerWidth);
-	      } else if (this.useSizer) {
-	        size = (0, _getNumberStyle2.default)(this.options.sizer, 'marginLeft');
-	      } else {
-	        size = this.options.gutterWidth;
-	      }
-	
-	      return size;
-	    }
-	
-	    /**
-	     * Calculate the number of columns to be used. Gets css if using sizer element.
-	     * @param {number} [containerWidth] Optionally specify a container width if
-	     *    it's already available.
-	     */
-	
-	  }, {
-	    key: '_setColumns',
-	    value: function _setColumns() {
-	      var containerWidth = arguments.length <= 0 || arguments[0] === undefined ? Shuffle.getSize(this.element).width : arguments[0];
-	
-	      var gutter = this._getGutterSize(containerWidth);
-	      var columnWidth = this._getColumnSize(containerWidth, gutter);
-	      var calculatedColumns = (containerWidth + gutter) / columnWidth;
-	
-	      // Widths given from getStyles are not precise enough...
-	      if (Math.abs(Math.round(calculatedColumns) - calculatedColumns) < this.options.columnThreshold) {
-	        // e.g. calculatedColumns = 11.998876
-	        calculatedColumns = Math.round(calculatedColumns);
-	      }
-	
-	      this.cols = Math.max(Math.floor(calculatedColumns), 1);
-	      this.containerWidth = containerWidth;
-	      this.colWidth = columnWidth;
-	    }
-	
-	    /**
-	     * Adjust the height of the grid
-	     */
-	
-	  }, {
-	    key: '_setContainerSize',
-	    value: function _setContainerSize() {
-	      this.element.style.height = this._getContainerSize() + 'px';
-	    }
-	
-	    /**
-	     * Based on the column heights, it returns the biggest one.
-	     * @return {number}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getContainerSize',
-	    value: function _getContainerSize() {
-	      return arrayMax(this.positions);
-	    }
-	
-	    /**
-	     * Get the clamped stagger amount.
-	     * @param {number} index Index of the item to be staggered.
-	     * @return {number}
-	     */
-	
-	  }, {
-	    key: '_getStaggerAmount',
-	    value: function _getStaggerAmount(index) {
-	      return Math.min(index * this.options.staggerAmount, this.options.staggerAmountMax);
-	    }
-	
-	    /**
-	     * @return {boolean} Whether the event was prevented or not.
-	     */
-	
-	  }, {
-	    key: '_dispatch',
-	    value: function _dispatch(name) {
-	      var details = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-	
-	      if (this.isDestroyed) {
-	        return;
-	      }
-	
-	      details.shuffle = this;
-	      return !this.element.dispatchEvent(new CustomEvent(name, {
-	        bubbles: true,
-	        cancelable: false,
-	        detail: details
-	      }));
-	    }
-	
-	    /**
-	     * Zeros out the y columns array, which is used to determine item placement.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_resetCols',
-	    value: function _resetCols() {
-	      var i = this.cols;
-	      this.positions = [];
-	      while (i--) {
-	        this.positions.push(0);
-	      }
-	    }
-	
-	    /**
-	     * Loops through each item that should be shown and calculates the x, y position.
-	     * @param {Array.<ShuffleItem>} items Array of items that will be shown/layed
-	     *     out in order in their array.
-	     */
-	
-	  }, {
-	    key: '_layout',
-	    value: function _layout(items) {
-	      var _this3 = this;
-	
-	      var count = 0;
-	      items.forEach(function (item) {
-	        var currPos = item.point;
-	        var currScale = item.scale;
-	        var itemSize = Shuffle.getSize(item.element, true);
-	        var pos = _this3._getItemPosition(itemSize);
-	
-	        function callback() {
-	          item.element.style.transitionDelay = '';
-	          item.applyCss(_shuffleItem2.default.Css.VISIBLE.after);
-	        }
-	
-	        // If the item will not change its position, do not add it to the render
-	        // queue. Transitions don't fire when setting a property to the same value.
-	        if (_point2.default.equals(currPos, pos) && currScale === _shuffleItem2.default.Scale.VISIBLE) {
-	          callback();
-	          return;
-	        }
-	
-	        item.point = pos;
-	        item.scale = _shuffleItem2.default.Scale.VISIBLE;
-	
-	        // Use xtend here to clone the object so that the `before` object isn't
-	        // modified when the transition delay is added.
-	        var styles = (0, _xtend2.default)(_shuffleItem2.default.Css.VISIBLE.before);
-	        styles.transitionDelay = _this3._getStaggerAmount(count) + 'ms';
-	
-	        _this3._queue.push({
-	          item: item,
-	          styles: styles,
-	          callback: callback
-	        });
-	
-	        count++;
-	      });
-	    }
-	
-	    /**
-	     * Determine the location of the next item, based on its size.
-	     * @param {{width: number, height: number}} itemSize Object with width and height.
-	     * @return {Point}
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getItemPosition',
-	    value: function _getItemPosition(itemSize) {
-	      return (0, _layout2.getItemPosition)({
-	        itemSize: itemSize,
-	        positions: this.positions,
-	        gridSize: this.colWidth,
-	        total: this.cols,
-	        threshold: this.options.columnThreshold,
-	        buffer: this.options.buffer
-	      });
-	    }
-	
-	    /**
-	     * Hides the elements that don't match our filter.
-	     * @param {Array.<ShuffleItem>} collection Collection to shrink.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_shrink',
-	    value: function _shrink() {
-	      var _this4 = this;
-	
-	      var collection = arguments.length <= 0 || arguments[0] === undefined ? this._getConcealedItems() : arguments[0];
-	
-	      var count = 0;
-	      collection.forEach(function (item) {
-	        function callback() {
-	          item.applyCss(_shuffleItem2.default.Css.HIDDEN.after);
-	        }
-	
-	        // Continuing would add a transitionend event listener to the element, but
-	        // that listener would not execute because the transform and opacity would
-	        // stay the same.
-	        // The callback is executed here because it is not guaranteed to be called
-	        // after the transitionend event because the transitionend could be
-	        // canceled if another animation starts.
-	        if (item.scale === _shuffleItem2.default.Scale.HIDDEN) {
-	          callback();
-	          return;
-	        }
-	
-	        item.scale = _shuffleItem2.default.Scale.HIDDEN;
-	
-	        var styles = (0, _xtend2.default)(_shuffleItem2.default.Css.HIDDEN.before);
-	        styles.transitionDelay = _this4._getStaggerAmount(count) + 'ms';
-	
-	        _this4._queue.push({
-	          item: item,
-	          styles: styles,
-	          callback: callback
-	        });
-	
-	        count++;
-	      });
-	    }
-	
-	    /**
-	     * Resize handler.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_handleResize',
-	    value: function _handleResize() {
-	      // If shuffle is disabled, destroyed, don't do anything
-	      if (!this.isEnabled || this.isDestroyed) {
-	        return;
-	      }
-	
-	      // Will need to check height in the future if it's layed out horizontaly
-	      var containerWidth = Shuffle.getSize(this.element).width;
-	
-	      // containerWidth hasn't changed, don't do anything
-	      if (containerWidth === this.containerWidth) {
-	        return;
-	      }
-	
-	      this.update();
-	    }
-	
-	    /**
-	     * Returns styles which will be applied to the an item for a transition.
-	     * @param {Object} obj Transition options.
-	     * @return {!Object} Transforms for transitions, left/top for animate.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_getStylesForTransition',
-	    value: function _getStylesForTransition(_ref2) {
-	      var item = _ref2.item;
-	      var styles = _ref2.styles;
-	
-	      if (!styles.transitionDelay) {
-	        styles.transitionDelay = '0ms';
-	      }
-	
-	      var x = item.point.x;
-	      var y = item.point.y;
-	
-	      if (this.options.useTransforms) {
-	        styles.transform = 'translate(' + x + 'px, ' + y + 'px) scale(' + item.scale + ')';
-	      } else {
-	        styles.left = x + 'px';
-	        styles.top = y + 'px';
-	      }
-	
-	      return styles;
-	    }
-	
-	    /**
-	     * Listen for the transition end on an element and execute the itemCallback
-	     * when it finishes.
-	     * @param {Element} element Element to listen on.
-	     * @param {Function} itemCallback Callback for the item.
-	     * @param {Function} done Callback to notify `parallel` that this one is done.
-	     */
-	
-	  }, {
-	    key: '_whenTransitionDone',
-	    value: function _whenTransitionDone(element, itemCallback, done) {
-	      var id = (0, _onTransitionEnd.onTransitionEnd)(element, function (evt) {
-	        itemCallback();
-	        done(null, evt);
-	      });
-	
-	      this._transitions.push(id);
-	    }
-	
-	    /**
-	     * Return a function which will set CSS styles and call the `done` function
-	     * when (if) the transition finishes.
-	     * @param {Object} opts Transition object.
-	     * @return {Function} A function to be called with a `done` function.
-	     */
-	
-	  }, {
-	    key: '_getTransitionFunction',
-	    value: function _getTransitionFunction(opts) {
-	      var _this5 = this;
-	
-	      return function (done) {
-	        opts.item.applyCss(_this5._getStylesForTransition(opts));
-	        _this5._whenTransitionDone(opts.item.element, opts.callback, done);
-	      };
-	    }
-	
-	    /**
-	     * Execute the styles gathered in the style queue. This applies styles to elements,
-	     * triggering transitions.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_processQueue',
-	    value: function _processQueue() {
-	      if (this.isTransitioning) {
-	        this._cancelMovement();
-	      }
-	
-	      var hasSpeed = this.options.speed > 0;
-	      var hasQueue = this._queue.length > 0;
-	
-	      if (hasQueue && hasSpeed && this.isInitialized) {
-	        this._startTransitions(this._queue);
-	      } else if (hasQueue) {
-	        this._styleImmediately(this._queue);
-	        this._dispatchLayout();
-	
-	        // A call to layout happened, but none of the newly visible items will
-	        // change position or the transition duration is zero, which will not trigger
-	        // the transitionend event.
-	      } else {
-	        this._dispatchLayout();
-	      }
-	
-	      // Remove everything in the style queue
-	      this._queue.length = 0;
-	    }
-	
-	    /**
-	     * Wait for each transition to finish, the emit the layout event.
-	     * @param {Array.<Object>} transitions Array of transition objects.
-	     */
-	
-	  }, {
-	    key: '_startTransitions',
-	    value: function _startTransitions(transitions) {
-	      var _this6 = this;
-	
-	      // Set flag that shuffle is currently in motion.
-	      this.isTransitioning = true;
-	
-	      // Create an array of functions to be called.
-	      var callbacks = transitions.map(function (obj) {
-	        return _this6._getTransitionFunction(obj);
-	      });
-	
-	      (0, _arrayParallel2.default)(callbacks, this._movementFinished.bind(this));
-	    }
-	  }, {
-	    key: '_cancelMovement',
-	    value: function _cancelMovement() {
-	      // Remove the transition end event for each listener.
-	      this._transitions.forEach(_onTransitionEnd.cancelTransitionEnd);
-	
-	      // Reset the array.
-	      this._transitions.length = 0;
-	
-	      // Show it's no longer active.
-	      this.isTransitioning = false;
-	    }
-	
-	    /**
-	     * Apply styles without a transition.
-	     * @param {Array.<Object>} objects Array of transition objects.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_styleImmediately',
-	    value: function _styleImmediately(objects) {
-	      var _this7 = this;
-	
-	      if (objects.length) {
-	        var elements = objects.map(function (obj) {
-	          return obj.item.element;
-	        });
-	
-	        Shuffle._skipTransitions(elements, function () {
-	          objects.forEach(function (obj) {
-	            obj.item.applyCss(_this7._getStylesForTransition(obj));
-	            obj.callback();
-	          });
-	        });
-	      }
-	    }
-	  }, {
-	    key: '_movementFinished',
-	    value: function _movementFinished() {
-	      this._transitions.length = 0;
-	      this.isTransitioning = false;
-	      this._dispatchLayout();
-	    }
-	  }, {
-	    key: '_dispatchLayout',
-	    value: function _dispatchLayout() {
-	      this._dispatch(Shuffle.EventType.LAYOUT);
-	    }
-	
-	    /**
-	     * The magic. This is what makes the plugin 'shuffle'
-	     * @param {string|Function|Array.<string>} [category] Category to filter by.
-	     *     Can be a function, string, or array of strings.
-	     * @param {Object} [sortObj] A sort object which can sort the visible set
-	     */
-	
-	  }, {
-	    key: 'filter',
-	    value: function filter(category, sortObj) {
-	      if (!this.isEnabled) {
-	        return;
-	      }
-	
-	      if (!category || category && category.length === 0) {
-	        category = Shuffle.ALL_ITEMS;
-	      }
-	
-	      this._filter(category);
-	
-	      // Shrink each hidden item
-	      this._shrink();
-	
-	      // How many visible elements?
-	      this._updateItemCount();
-	
-	      // Update transforms on visible elements so they will animate to their new positions.
-	      this.sort(sortObj);
-	    }
-	
-	    /**
-	     * Gets the visible elements, sorts them, and passes them to layout.
-	     * @param {Object} opts the options object for the sorted plugin
-	     */
-	
-	  }, {
-	    key: 'sort',
-	    value: function sort() {
-	      var opts = arguments.length <= 0 || arguments[0] === undefined ? this.lastSort : arguments[0];
-	
-	      if (!this.isEnabled) {
-	        return;
-	      }
-	
-	      this._resetCols();
-	
-	      var items = this._getFilteredItems();
-	      items = (0, _sorter2.default)(items, opts);
-	
-	      this._layout(items);
-	
-	      // `_layout` always happens after `_shrink`, so it's safe to process the style
-	      // queue here with styles from the shrink method.
-	      this._processQueue();
-	
-	      // Adjust the height of the container.
-	      this._setContainerSize();
-	
-	      this.lastSort = opts;
-	    }
-	
-	    /**
-	     * Reposition everything.
-	     * @param {boolean} isOnlyLayout If true, column and gutter widths won't be
-	     *     recalculated.
-	     */
-	
-	  }, {
-	    key: 'update',
-	    value: function update(isOnlyLayout) {
-	      if (this.isEnabled) {
-	
-	        if (!isOnlyLayout) {
-	          // Get updated colCount
-	          this._setColumns();
-	        }
-	
-	        // Layout items
-	        this.sort();
-	      }
-	    }
-	
-	    /**
-	     * Use this instead of `update()` if you don't need the columns and gutters updated
-	     * Maybe an image inside `shuffle` loaded (and now has a height), which means calculations
-	     * could be off.
-	     */
-	
-	  }, {
-	    key: 'layout',
-	    value: function layout() {
-	      this.update(true);
-	    }
-	
-	    /**
-	     * New items have been appended to shuffle. Mix them in with the current
-	     * filter or sort status.
-	     * @param {Array.<Element>} newItems Collection of new items.
-	     */
-	
-	  }, {
-	    key: 'add',
-	    value: function add(newItems) {
-	      newItems = (0, _arrayUniq2.default)(newItems).map(function (el) {
-	        return new _shuffleItem2.default(el);
-	      });
-	
-	      // Add classes and set initial positions.
-	      this._initItems(newItems);
-	
-	      // Add transition to each item.
-	      this._setTransitions(newItems);
-	
-	      // Update the list of items.
-	      this.items = this.items.concat(newItems);
-	      this._updateItemsOrder();
-	      this.filter(this.lastFilter);
-	    }
-	
-	    /**
-	     * Disables shuffle from updating dimensions and layout on resize
-	     */
-	
-	  }, {
-	    key: 'disable',
-	    value: function disable() {
-	      this.isEnabled = false;
-	    }
-	
-	    /**
-	     * Enables shuffle again
-	     * @param {boolean} [isUpdateLayout=true] if undefined, shuffle will update columns and gutters
-	     */
-	
-	  }, {
-	    key: 'enable',
-	    value: function enable(isUpdateLayout) {
-	      this.isEnabled = true;
-	      if (isUpdateLayout !== false) {
-	        this.update();
-	      }
-	    }
-	
-	    /**
-	     * Remove 1 or more shuffle items
-	     * @param {Array.<Element>} collection An array containing one or more
-	     *     elements in shuffle
-	     * @return {Shuffle} The shuffle object
-	     */
-	
-	  }, {
-	    key: 'remove',
-	    value: function remove(collection) {
-	      var _this8 = this;
-	
-	      if (!collection.length) {
-	        return;
-	      }
-	
-	      collection = (0, _arrayUniq2.default)(collection);
-	
-	      var oldItems = collection.map(function (element) {
-	        return _this8.getItemByElement(element);
-	      }).filter(function (item) {
-	        return !!item;
-	      });
-	
-	      var handleLayout = function handleLayout() {
-	        _this8.element.removeEventListener(Shuffle.EventType.LAYOUT, handleLayout);
-	        _this8._disposeItems(oldItems);
-	
-	        // Remove the collection in the callback
-	        collection.forEach(function (element) {
-	          element.parentNode.removeChild(element);
-	        });
-	
-	        _this8._dispatch(Shuffle.EventType.REMOVED, { collection: collection });
-	
-	        // Let it get garbage collected
-	        collection = null;
-	        oldItems = null;
-	      };
-	
-	      // Hide collection first.
-	      this._toggleFilterClasses({
-	        visible: [],
-	        hidden: oldItems
-	      });
-	
-	      this._shrink(oldItems);
-	
-	      this.sort();
-	
-	      // Update the list of items here because `remove` could be called again
-	      // with an item that is in the process of being removed.
-	      this.items = this.items.filter(function (item) {
-	        return !arrayIncludes(oldItems, item);
-	      });
-	      this._updateItemCount();
-	
-	      this.element.addEventListener(Shuffle.EventType.LAYOUT, handleLayout);
-	    }
-	
-	    /**
-	     * Retrieve a shuffle item by its element.
-	     * @param {Element} element Element to look for.
-	     * @return {?ShuffleItem} A shuffle item or null if it's not found.
-	     */
-	
-	  }, {
-	    key: 'getItemByElement',
-	    value: function getItemByElement(element) {
-	      for (var i = this.items.length - 1; i >= 0; i--) {
-	        if (this.items[i].element === element) {
-	          return this.items[i];
-	        }
-	      }
-	
-	      return null;
-	    }
-	
-	    /**
-	     * Destroys shuffle, removes events, styles, and classes
-	     */
-	
-	  }, {
-	    key: 'destroy',
-	    value: function destroy() {
-	      this._cancelMovement();
-	      window.removeEventListener('resize', this._onResize);
-	
-	      // Reset container styles
-	      this.element.classList.remove('shuffle');
-	      this.element.removeAttribute('style');
-	
-	      // Reset individual item styles
-	      this._disposeItems();
-	
-	      // Null DOM references
-	      this.items = null;
-	      this.options.sizer = null;
-	      this.element = null;
-	      this._transitions = null;
-	
-	      // Set a flag so if a debounced resize has been triggered,
-	      // it can first check if it is actually isDestroyed and not doing anything
-	      this.isDestroyed = true;
-	    }
-	
-	    /**
-	     * Returns the outer width of an element, optionally including its margins.
-	     *
-	     * There are a few different methods for getting the width of an element, none of
-	     * which work perfectly for all Shuffle's use cases.
-	     *
-	     * 1. getBoundingClientRect() `left` and `right` properties.
-	     *   - Accounts for transform scaled elements, making it useless for Shuffle
-	     *   elements which have shrunk.
-	     * 2. The `offsetWidth` property.
-	     *   - This value stays the same regardless of the elements transform property,
-	     *   however, it does not return subpixel values.
-	     * 3. getComputedStyle()
-	     *   - This works great Chrome, Firefox, Safari, but IE<=11 does not include
-	     *   padding and border when box-sizing: border-box is set, requiring a feature
-	     *   test and extra work to add the padding back for IE and other browsers which
-	     *   follow the W3C spec here.
-	     *
-	     * @param {Element} element The element.
-	     * @param {boolean} [includeMargins] Whether to include margins. Default is false.
-	     * @return {{width: number, height: number}} The width and height.
-	     */
-	
-	  }], [{
-	    key: 'getSize',
-	    value: function getSize(element, includeMargins) {
-	      // Store the styles so that they can be used by others without asking for it again.
-	      var styles = window.getComputedStyle(element, null);
-	      var width = (0, _getNumberStyle2.default)(element, 'width', styles);
-	      var height = (0, _getNumberStyle2.default)(element, 'height', styles);
-	
-	      if (includeMargins) {
-	        var marginLeft = (0, _getNumberStyle2.default)(element, 'marginLeft', styles);
-	        var marginRight = (0, _getNumberStyle2.default)(element, 'marginRight', styles);
-	        var marginTop = (0, _getNumberStyle2.default)(element, 'marginTop', styles);
-	        var marginBottom = (0, _getNumberStyle2.default)(element, 'marginBottom', styles);
-	        width += marginLeft + marginRight;
-	        height += marginTop + marginBottom;
-	      }
-	
-	      return {
-	        width: width,
-	        height: height
-	      };
-	    }
-	
-	    /**
-	     * Change a property or execute a function which will not have a transition
-	     * @param {Array.<Element>} elements DOM elements that won't be transitioned.
-	     * @param {Function} callback A function which will be called while transition
-	     *     is set to 0ms.
-	     * @private
-	     */
-	
-	  }, {
-	    key: '_skipTransitions',
-	    value: function _skipTransitions(elements, callback) {
-	      var zero = '0ms';
-	
-	      // Save current duration and delay.
-	      var data = elements.map(function (element) {
-	        var style = element.style;
-	        var duration = style.transitionDuration;
-	        var delay = style.transitionDelay;
-	
-	        // Set the duration to zero so it happens immediately
-	        style.transitionDuration = zero;
-	        style.transitionDelay = zero;
-	
-	        return {
-	          duration: duration,
-	          delay: delay
-	        };
-	      });
-	
-	      callback();
-	
-	      // Cause reflow.
-	      elements[0].offsetWidth; // jshint ignore:line
-	
-	      // Put the duration back
-	      elements.forEach(function (element, i) {
-	        element.style.transitionDuration = data[i].duration;
-	        element.style.transitionDelay = data[i].delay;
-	      });
-	    }
-	  }]);
-	
-	  return Shuffle;
-	}();
-	
-	Shuffle.ShuffleItem = _shuffleItem2.default;
-	
-	Shuffle.ALL_ITEMS = 'all';
-	Shuffle.FILTER_ATTRIBUTE_KEY = 'groups';
-	
-	/**
-	 * @enum {string}
-	 */
-	Shuffle.EventType = {
-	  LAYOUT: 'shuffle:layout',
-	  REMOVED: 'shuffle:removed'
-	};
-	
-	/** @enum {string} */
-	Shuffle.Classes = _classes2.default;
-	
-	// Overrideable options
-	Shuffle.options = {
-	  // Initial filter group.
-	  group: Shuffle.ALL_ITEMS,
-	
-	  // Transition/animation speed (milliseconds).
-	  speed: 250,
-	
-	  // CSS easing function to use.
-	  easing: 'ease',
-	
-	  // e.g. '.picture-item'.
-	  itemSelector: '*',
-	
-	  // Element or selector string. Use an element to determine the size of columns
-	  // and gutters.
-	  sizer: null,
-	
-	  // A static number or function that tells the plugin how wide the gutters
-	  // between columns are (in pixels).
-	  gutterWidth: 0,
-	
-	  // A static number or function that returns a number which tells the plugin
-	  // how wide the columns are (in pixels).
-	  columnWidth: 0,
-	
-	  // If your group is not json, and is comma delimeted, you could set delimeter
-	  // to ','.
-	  delimeter: null,
-	
-	  // Useful for percentage based heights when they might not always be exactly
-	  // the same (in pixels).
-	  buffer: 0,
-	
-	  // Reading the width of elements isn't precise enough and can cause columns to
-	  // jump between values.
-	  columnThreshold: 0.01,
-	
-	  // Shuffle can be isInitialized with a sort object. It is the same object
-	  // given to the sort method.
-	  initialSort: null,
-	
-	  // By default, shuffle will throttle resize events. This can be changed or
-	  // removed.
-	  throttle: _throttleit2.default,
-	
-	  // How often shuffle can be called on resize (in milliseconds).
-	  throttleTime: 300,
-	
-	  // Transition delay offset for each item in milliseconds.
-	  staggerAmount: 15,
-	
-	  // Maximum stagger delay in milliseconds.
-	  staggerAmountMax: 250,
-	
-	  // Whether to use transforms or absolute positioning.
-	  useTransforms: true
-	};
-	
-	// Expose for testing. Hack at your own risk.
-	Shuffle.__Point = _point2.default;
-	Shuffle.__sorter = _sorter2.default;
-	Shuffle.__getColumnSpan = _layout2.getColumnSpan;
-	Shuffle.__getAvailablePositions = _layout2.getAvailablePositions;
-	Shuffle.__getShortColumn = _layout2.getShortColumn;
-	
-	exports.default = Shuffle;
-
-/***/ },
-/* 2 */
-/***/ function(module, exports) {
-
-	// Polyfill for creating CustomEvents on IE9/10/11
-	
-	// code pulled from:
-	// https://github.com/d4tocchini/customevent-polyfill
-	// https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent#Polyfill
-	
-	try {
-	  new window.CustomEvent("test");
-	} catch(e) {
-	 var CustomEvent = function(event, params) {
-	      var evt;
-	      params = params || {
-	          bubbles: false,
-	          cancelable: false,
-	          detail: undefined
-	      };
-	
-	      evt = document.createEvent("CustomEvent");
-	      evt.initCustomEvent(event, params.bubbles, params.cancelable, params.detail);
-	      return evt;
-	  };
-	
-	  CustomEvent.prototype = window.Event.prototype;
-	  window.CustomEvent = CustomEvent; // expose definition to window
-	}
+  var infowindow = new google.maps.InfoWindow({
+    content: contentString
+  });
 
 
-/***/ },
-/* 3 */
-/***/ function(module, exports) {
+  var marker = new google.maps.Marker({
+    position: uluru,
+    map: map,
+    icon: 'images/map-marker.png',
+    position : {lat: 49.27967, lng: -123.1005}
+  });
 
-	'use strict';
-	
-	var proto = Element.prototype;
-	var vendor = proto.matches
-	  || proto.matchesSelector
-	  || proto.webkitMatchesSelector
-	  || proto.mozMatchesSelector
-	  || proto.msMatchesSelector
-	  || proto.oMatchesSelector;
-	
-	module.exports = match;
-	
-	/**
-	 * Match `el` to `selector`.
-	 *
-	 * @param {Element} el
-	 * @param {String} selector
-	 * @return {Boolean}
-	 * @api public
-	 */
-	
-	function match(el, selector) {
-	  if (vendor) return vendor.call(el, selector);
-	  var nodes = el.parentNode.querySelectorAll(selector);
-	  for (var i = 0; i < nodes.length; i++) {
-	    if (nodes[i] == el) return true;
-	  }
-	  return false;
-	}
-
-/***/ },
-/* 4 */
-/***/ function(module, exports) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-	
-	// there's 3 implementations written in increasing order of efficiency
-	
-	// 1 - no Set type is defined
-	function uniqNoSet(arr) {
-		var ret = [];
-	
-		for (var i = 0; i < arr.length; i++) {
-			if (ret.indexOf(arr[i]) === -1) {
-				ret.push(arr[i]);
-			}
-		}
-	
-		return ret;
-	}
-	
-	// 2 - a simple Set type is defined
-	function uniqSet(arr) {
-		var seen = new Set();
-		return arr.filter(function (el) {
-			if (!seen.has(el)) {
-				seen.add(el);
-				return true;
-			}
-	
-			return false;
-		});
-	}
-	
-	// 3 - a standard Set type is defined and it has a forEach method
-	function uniqSetWithForEach(arr) {
-		var ret = [];
-	
-		(new Set(arr)).forEach(function (el) {
-			ret.push(el);
-		});
-	
-		return ret;
-	}
-	
-	// V8 currently has a broken implementation
-	// https://github.com/joyent/node/issues/8449
-	function doesForEachActuallyWork() {
-		var ret = false;
-	
-		(new Set([true])).forEach(function (el) {
-			ret = el;
-		});
-	
-		return ret === true;
-	}
-	
-	if ('Set' in global) {
-		if (typeof Set.prototype.forEach === 'function' && doesForEachActuallyWork()) {
-			module.exports = uniqSetWithForEach;
-		} else {
-			module.exports = uniqSet;
-		}
-	} else {
-		module.exports = uniqNoSet;
-	}
-	
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	module.exports = extend
-	
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	
-	function extend() {
-	    var target = {}
-	
-	    for (var i = 0; i < arguments.length; i++) {
-	        var source = arguments[i]
-	
-	        for (var key in source) {
-	            if (hasOwnProperty.call(source, key)) {
-	                target[key] = source[key]
-	            }
-	        }
-	    }
-	
-	    return target
-	}
+  infowindow.open(map, marker);
 
 
-/***/ },
-/* 6 */
-/***/ function(module, exports) {
+  map.mapTypes.set('styled_map', styledMapType);
+  map.setMapTypeId('styled_map');
 
-	module.exports = throttle;
-	
-	/**
-	 * Returns a new function that, when invoked, invokes `func` at most once per `wait` milliseconds.
-	 *
-	 * @param {Function} func Function to wrap.
-	 * @param {Number} wait Number of milliseconds that must elapse between `func` invocations.
-	 * @return {Function} A new function that wraps the `func` function passed in.
-	 */
-	
-	function throttle (func, wait) {
-	  var ctx, args, rtn, timeoutID; // caching
-	  var last = 0;
-	
-	  return function throttled () {
-	    ctx = this;
-	    args = arguments;
-	    var delta = new Date() - last;
-	    if (!timeoutID)
-	      if (delta >= wait) call();
-	      else timeoutID = setTimeout(call, wait - delta);
-	    return rtn;
-	  };
-	
-	  function call () {
-	    timeoutID = 0;
-	    last = +new Date();
-	    rtn = func.apply(ctx, args);
-	    ctx = null;
-	    args = null;
-	  }
-	}
+}
+
+// IMPORTANT!
+// If you're already using Modernizr, delete it from this file. If you don't know what Modernizr is, leave it :)
+
+/* Modernizr 2.6.2 (Custom Build) | MIT & BSD
+ * Build: http://modernizr.com/download/#-csstransforms-csstransforms3d-csstransitions-cssclasses-prefixed-teststyles-testprop-testallprops-prefixes-domprefixes
+ */
+;window.Modernizr=function(a,b,c){function z(a){j.cssText=a}function A(a,b){return z(m.join(a+";")+(b||""))}function B(a,b){return typeof a===b}function C(a,b){return!!~(""+a).indexOf(b)}function D(a,b){for(var d in a){var e=a[d];if(!C(e,"-")&&j[e]!==c)return b=="pfx"?e:!0}return!1}function E(a,b,d){for(var e in a){var f=b[a[e]];if(f!==c)return d===!1?a[e]:B(f,"function")?f.bind(d||b):f}return!1}function F(a,b,c){var d=a.charAt(0).toUpperCase()+a.slice(1),e=(a+" "+o.join(d+" ")+d).split(" ");return B(b,"string")||B(b,"undefined")?D(e,b):(e=(a+" "+p.join(d+" ")+d).split(" "),E(e,b,c))}var d="2.6.2",e={},f=!0,g=b.documentElement,h="modernizr",i=b.createElement(h),j=i.style,k,l={}.toString,m=" -webkit- -moz- -o- -ms- ".split(" "),n="Webkit Moz O ms",o=n.split(" "),p=n.toLowerCase().split(" "),q={},r={},s={},t=[],u=t.slice,v,w=function(a,c,d,e){var f,i,j,k,l=b.createElement("div"),m=b.body,n=m||b.createElement("body");if(parseInt(d,10))while(d--)j=b.createElement("div"),j.id=e?e[d]:h+(d+1),l.appendChild(j);return f=["&#173;",'<style id="s',h,'">',a,"</style>"].join(""),l.id=h,(m?l:n).innerHTML+=f,n.appendChild(l),m||(n.style.background="",n.style.overflow="hidden",k=g.style.overflow,g.style.overflow="hidden",g.appendChild(n)),i=c(l,a),m?l.parentNode.removeChild(l):(n.parentNode.removeChild(n),g.style.overflow=k),!!i},x={}.hasOwnProperty,y;!B(x,"undefined")&&!B(x.call,"undefined")?y=function(a,b){return x.call(a,b)}:y=function(a,b){return b in a&&B(a.constructor.prototype[b],"undefined")},Function.prototype.bind||(Function.prototype.bind=function(b){var c=this;if(typeof c!="function")throw new TypeError;var d=u.call(arguments,1),e=function(){if(this instanceof e){var a=function(){};a.prototype=c.prototype;var f=new a,g=c.apply(f,d.concat(u.call(arguments)));return Object(g)===g?g:f}return c.apply(b,d.concat(u.call(arguments)))};return e}),q.csstransforms=function(){return!!F("transform")},q.csstransforms3d=function(){var a=!!F("perspective");return a&&"webkitPerspective"in g.style&&w("@media (transform-3d),(-webkit-transform-3d){#modernizr{left:9px;position:absolute;height:3px;}}",function(b,c){a=b.offsetLeft===9&&b.offsetHeight===3}),a},q.csstransitions=function(){return F("transition")};for(var G in q)y(q,G)&&(v=G.toLowerCase(),e[v]=q[G](),t.push((e[v]?"":"no-")+v));return e.addTest=function(a,b){if(typeof a=="object")for(var d in a)y(a,d)&&e.addTest(d,a[d]);else{a=a.toLowerCase();if(e[a]!==c)return e;b=typeof b=="function"?b():b,typeof f!="undefined"&&f&&(g.className+=" "+(b?"":"no-")+a),e[a]=b}return e},z(""),i=k=null,e._version=d,e._prefixes=m,e._domPrefixes=p,e._cssomPrefixes=o,e.testProp=function(a){return D([a])},e.testAllProps=F,e.testStyles=w,e.prefixed=function(a,b,c){return b?F(a,b,c):F(a,"pfx")},g.className=g.className.replace(/(^|\s)no-js(\s|$)/,"$1$2")+(f?" js "+t.join(" "):""),e}(this,this.document);
 
 
-/***/ },
-/* 7 */
-/***/ function(module, exports) {
+// Shuffle Doesn't require this shuffle/debounce plugin, but it works better with it.
 
-	module.exports = function parallel(fns, context, callback) {
-	  if (!callback) {
-	    if (typeof context === 'function') {
-	      callback = context
-	      context = null
-	    } else {
-	      callback = noop
-	    }
-	  }
-	
-	  var pending = fns && fns.length
-	  if (!pending) return callback(null, []);
-	
-	  var finished = false
-	  var results = new Array(pending)
-	
-	  fns.forEach(context ? function (fn, i) {
-	    fn.call(context, maybeDone(i))
-	  } : function (fn, i) {
-	    fn(maybeDone(i))
-	  })
-	
-	  function maybeDone(i) {
-	    return function (err, result) {
-	      if (finished) return;
-	
-	      if (err) {
-	        callback(err, results)
-	        finished = true
-	        return
-	      }
-	
-	      results[i] = result
-	
-	      if (!--pending) callback(null, results);
-	    }
-	  }
-	}
-	
-	function noop() {}
+/*
+ * jQuery throttle / debounce - v1.1 - 3/7/2010
+ * http://benalman.com/projects/jquery-throttle-debounce-plugin/
+ *
+ * Copyright (c) 2010 "Cowboy" Ben Alman
+ * Dual licensed under the MIT and GPL licenses.
+ * http://benalman.com/about/license/
+ */
+(function(b,c){var $=b.jQuery||b.Cowboy||(b.Cowboy={}),a;$.throttle=a=function(e,f,j,i){var h,d=0;if(typeof f!=="boolean"){i=j;j=f;f=c}function g(){var o=this,m=+new Date()-d,n=arguments;function l(){d=+new Date();j.apply(o,n)}function k(){h=c}if(i&&!h){l()}h&&clearTimeout(h);if(i===c&&m>e){l()}else{if(f!==true){h=setTimeout(i?k:l,i===c?e-m:e)}}}if($.guid){g.guid=j.guid=j.guid||$.guid++}return g};$.debounce=function(d,e,f){return f===c?a(d,e,false):a(d,f,e!==false)}})(this);
 
+/*!
+ * jQuery Shuffle Plugin
+ * Uses CSS Transforms to filter down a grid of items.
+ * Dependencies: jQuery 1.9+, Modernizr 2.6.2. Optionally throttle/debounce by Ben Alman
+ * Inspired by Isotope http://isotope.metafizzy.co/
+ * Licensed under the MIT license.
+ * @author Glen Cheney (http://glencheney.com)
+ * @version 2.0
+ * @date 07/05/13
+ */
+!function(t,e,i){"use strict"
+t.fn.sorted=function(e){var n=t.extend({},t.fn.sorted.defaults,e),s=this.get(),r=!1
+return s.length?n.randomize?t.fn.sorted.randomize(s):(n.by!==t.noop&&null!==n.by&&n.by!==i&&s.sort(function(e,s){if(r)return 0
+var o=n.by(t(e)),a=n.by(t(s))
+return o===i&&a===i?(r=!0,0):"sortFirst"===o||"sortLast"===a?-1:"sortLast"===o||"sortFirst"===a?1:a>o?-1:o>a?1:0}),r?this.get():(n.reverse&&s.reverse(),s)):[]},t.fn.sorted.defaults={reverse:!1,by:null,randomize:!1},t.fn.sorted.randomize=function(t){var e,i,n=t.length
+if(!n)return t
+for(;--n;)i=Math.floor(Math.random()*(n+1)),e=t[i],t[i]=t[n],t[n]=e
+return t}
+var n=0,s=function(e,i){var r=this
+t.extend(r,s.options,i,s.settings),r.$container=e,r.$window=t(window),r.unique="shuffle_"+n++,r._fire("loading"),r._init(),r._fire("done")}
+s.prototype={_init:function(){var e,i=this,n=t.proxy(i._onResize,i),s=i.throttle?i.throttle(i.throttleTime,n):n,r=i.initialSort?i.initialSort:null
+i._setVars(),i._resetCols(),i._addClasses(),i._initItems(),i.$window.on("resize.shuffle."+i.unique,s),e=i.$container.css(["paddingLeft","paddingRight","position","width"]),"static"===e.position&&i.$container.css("position","relative"),i.offset={left:parseInt(e.paddingLeft,10)||0,top:parseInt(e.paddingTop,10)||0},i._setColumns(parseInt(e.width,10)),i.shuffle(i.group,r),i.supported&&setTimeout(function(){i._setTransitions(),i.$container[0].style[i.transitionName]="height "+i.speed+"ms "+i.easing},0)},_addClasses:function(){var t=this
+return t.$container.addClass("shuffle"),t.$items.addClass("shuffle-item filtered"),t},_setVars:function(){var e=this
+return e.$items=e._getItems(),e.transitionName=e.prefixed("transition"),e.transitionDelayName=e.prefixed("transitionDelay"),e.transitionDuration=e.prefixed("transitionDuration"),e.transform=e.getPrefixed("transform"),e.transitionend={WebkitTransition:"webkitTransitionEnd",MozTransition:"transitionend",OTransition:"oTransitionEnd",msTransition:"MSTransitionEnd",transition:"transitionend"}[e.transitionName],e.isFluid=e.columnWidth&&"function"==typeof e.columnWidth,0===e.columnWidth&&null!==e.sizer&&(e.columnWidth=e.sizer),"string"==typeof e.columnWidth?e.$sizer=e.$container.find(e.columnWidth):e.columnWidth&&e.columnWidth.nodeType&&1===e.columnWidth.nodeType?e.$sizer=t(e.columnWidth):e.columnWidth&&e.columnWidth.jquery&&(e.$sizer=e.columnWidth),e.$sizer&&e.$sizer.length&&(e.useSizer=!0,e.sizer=e.$sizer[0]),e},_filter:function(e,n){var s=this,r=n!==i,o=r?n:s.$items,a=t()
+return e=e||s.lastFilter,s._fire("filter"),t.isFunction(e)?o.each(function(){var i=t(this),n=e.call(i[0],i,s)
+n&&(a=a.add(i))}):(s.group=e,"all"!==e?o.each(function(){var i=t(this),n=i.data("groups"),r=s.delimeter&&!t.isArray(n)?n.split(s.delimeter):n,o=t.inArray(e,r)>-1
+o&&(a=a.add(i))}):a=o),s._toggleFilterClasses(o,a),o=null,n=null,a},_toggleFilterClasses:function(e,i){var n="concealed",s="filtered"
+e.filter(i).each(function(){var e=t(this)
+e.hasClass(n)&&e.removeClass(n),e.hasClass(s)||e.addClass(s)}),e.not(i).each(function(){var e=t(this)
+e.hasClass(n)||e.addClass(n),e.hasClass(s)&&e.removeClass(s)})},_initItems:function(t){return t=t||this.$items,t.css(this.itemCss)},_updateItemCount:function(){return this.visibleItems=this.$items.filter(".filtered").length,this},_setTransition:function(t){var e=this
+return t.style[e.transitionName]=e.transform+" "+e.speed+"ms "+e.easing+", opacity "+e.speed+"ms "+e.easing,t},_setTransitions:function(t){var e=this
+return t=t||e.$items,t.each(function(){e._setTransition(this)}),e},_setSequentialDelay:function(e){var i=this
+i.supported&&t.each(e,function(e){this.style[i.transitionDelayName]="0ms,"+(e+1)*i.sequentialFadeDelay+"ms",t(this).one(i.transitionend,function(){this.style[i.transitionDelayName]="0ms"})})},_getItems:function(){return this.$container.children(this.itemSelector)},_getPreciseDimension:function(e,i){var n
+return n=window.getComputedStyle?window.getComputedStyle(e,null)[i]:t(e).css(i),parseFloat(n)},_setColumns:function(t){var e,i=this,n=t||i.$container.width(),s="function"==typeof i.gutterWidth?i.gutterWidth(n):i.useSizer?i._getPreciseDimension(i.sizer,"marginLeft"):i.gutterWidth
+i.colWidth=i.isFluid?i.columnWidth(n):i.useSizer?i._getPreciseDimension(i.sizer,"width"):i.columnWidth||i.$items.outerWidth(!0)||n,i.colWidth=i.colWidth||n,i.colWidth+=s,e=(n+s)/i.colWidth,Math.ceil(e)-e<.01&&(e=Math.ceil(e)),i.cols=Math.floor(e),i.cols=Math.max(i.cols,1),i.containerWidth=n},_setContainerSize:function(){var t=this,e=Math.max.apply(Math,t.colYs)
+t.$container.css("height",e+"px")},_fire:function(t,e){this.$container.trigger(t+".shuffle",e&&e.length?e:[this])},_layout:function(e,i,n,s){var r=this
+i=i||r.filterEnd,r.layoutTransitionEnded=!1,t.each(e,function(o){var a=t(e[o]),l=Math.ceil(a.outerWidth(!0)/r.colWidth)
+if(l=Math.min(l,r.cols),1===l)r._placeItem(a,r.colYs,i,n,s)
+else{var u,d,c=r.cols+1-l,f=[]
+for(d=0;c>d;d++)u=r.colYs.slice(d,d+l),f[d]=Math.max.apply(Math,u)
+r._placeItem(a,f,i,n,s)}}),r._processStyleQueue(),r._setContainerSize()},_resetCols:function(){var t=this.cols
+for(this.colYs=[];t--;)this.colYs.push(0)},_reLayout:function(t,e){var i=this
+t=t||i.filterEnd,i._resetCols(),i.keepSorted&&i.lastSort?i.sort(i.lastSort,!0,e):i._layout(i.$items.filter(".filtered").get(),i.filterEnd,e)},_placeItem:function(t,e,i,n,s){for(var r=this,o=Math.min.apply(Math,e),a=0,l=0,u=e.length;u>l;l++)if(e[l]>=o-r.buffer&&e[l]<=o+r.buffer){a=l
+break}var d=r.colWidth*a,c=o
+d=Math.round(d+r.offset.left),c=Math.round(c+r.offset.top),t.data({x:d,y:c})
+var f=o+t.outerHeight(!0),h=r.cols+1-u
+for(l=0;h>l;l++)r.colYs[a+l]=f
+var p={from:"layout",$this:t,x:d,y:c,scale:1}
+n?p.skipTransition=!0:(p.opacity=1,p.callback=i),s&&(p.opacity=0),r.styleQueue.push(p)},_shrink:function(e,i){var n=this,s=e||n.$items.filter(".concealed"),r={},o=i||n.shrinkEnd
+s.length&&(n._fire("shrink"),n.shrinkTransitionEnded=!1,s.each(function(){var e=t(this),i=e.data()
+r={from:"shrink",$this:e,x:i.x,y:i.y,scale:.001,opacity:0,callback:o},n.styleQueue.push(r)}))},_onResize:function(){var t,e=this
+e.enabled&&!e.destroyed&&(t=e.$container.width(),t!==e.containerWidth&&e.resized())},setPrefixedCss:function(t,e,i){t.css(this.prefixed(e),i)},getPrefixed:function(t){var e=this.prefixed(t)
+return e?e.replace(/([A-Z])/g,function(t,e){return"-"+e.toLowerCase()}).replace(/^ms-/,"-ms-"):e},transition:function(e){var n,s=this,r=function(){s.layoutTransitionEnded||"layout"!==e.from?s.shrinkTransitionEnded||"shrink"!==e.from||(e.callback.call(s),s.shrinkTransitionEnded=!0):(s._fire("layout"),e.callback.call(s),s.layoutTransitionEnded=!0)}
+if(e.callback=e.callback||t.noop,s.supported)e.scale===i&&(e.scale=1),n=s.threeD?"translate3d("+e.x+"px, "+e.y+"px, 0) scale3d("+e.scale+", "+e.scale+", 1)":"translate("+e.x+"px, "+e.y+"px) scale("+e.scale+", "+e.scale+")",e.x!==i&&s.setPrefixedCss(e.$this,"transform",n),e.opacity!==i&&e.$this.css("opacity",e.opacity),e.$this.one(s.transitionend,r)
+else{var o={left:e.x,top:e.y,opacity:e.opacity}
+e.$this.stop(!0).animate(o,s.speed,"swing",r)}},_processStyleQueue:function(){var e=this,i=e.styleQueue
+t.each(i,function(t,i){i.skipTransition?e._skipTransition(i.$this[0],function(){e.transition(i)}):e.transition(i)}),e.styleQueue.length=0},shrinkEnd:function(){this._fire("shrunk")},filterEnd:function(){this._fire("filtered")},sortEnd:function(){this._fire("sorted")},_skipTransition:function(e,i,n){var s,r=this,o=r.transitionDuration,a=e.style[o]
+e.style[o]="0ms",t.isFunction(i)?i():e.style[i]=n,s=e.offsetWidth,e.style[o]=a},_addItems:function(t,e,n){var s,r,o=this
+o.supported||(e=!1),t.addClass("shuffle-item"),o._initItems(t),o._setTransitions(t),o.$items=o._getItems(),t.css("opacity",0),s=o._filter(i,t),r=s.get(),o._updateItemCount(),e?(o._layout(r,null,!0,!0),n&&o._setSequentialDelay(s),o._revealAppended(s)):o._layout(r)},_revealAppended:function(e){var i=this
+setTimeout(function(){e.each(function(e,n){i.transition({from:"reveal",$this:t(n),opacity:1})})},i.revealAppendedDelay)},shuffle:function(t,e){var i=this
+i.enabled&&(t||(t="all"),i._filter(t),i.lastFilter=t,i._updateItemCount(),i._resetCols(),i._shrink(),e&&(i.lastSort=e),i._reLayout())},sort:function(t,e,i){var n=this,s=n.$items.filter(".filtered").sorted(t)
+e||n._resetCols(),n._layout(s,function(){e&&n.filterEnd(),n.sortEnd()},i),n.lastSort=t},resized:function(t){this.enabled&&(t||this._setColumns(),this._reLayout())},layout:function(){this.update(!0)},update:function(t){this.resized(t)},appended:function(t,e,i){e=e===!1?!1:!0,i=i===!1?!1:!0,this._addItems(t,e,i)},disable:function(){this.enabled=!1},enable:function(t){this.enabled=!0,t!==!1&&this.update()},remove:function(t){if(t.length&&t.jquery){var e=this
+return e._shrink(t,function(){var e=this
+t.remove(),setTimeout(function(){e.$items=e._getItems(),e.layout(),e._updateItemCount(),e._fire("removed",[t,e]),t=null},0)}),e._processStyleQueue(),e}},destroy:function(){var t=this
+t.$window.off("."+t.unique),t.$container.removeClass("shuffle").removeAttr("style").removeData("shuffle"),t.$items.removeAttr("style").removeClass("concealed filtered shuffle-item"),t.destroyed=!0}},s.options={group:"all",speed:250,easing:"ease-out",itemSelector:"",sizer:null,gutterWidth:0,columnWidth:0,delimeter:null,buffer:0,initialSort:null,throttle:t.throttle||null,throttleTime:300,sequentialFadeDelay:150,supported:e.csstransforms&&e.csstransitions},s.settings={$sizer:null,useSizer:!1,itemCss:{position:"absolute",top:0,left:0},offset:{top:0,left:0},revealAppendedDelay:300,keepSorted:!0,enabled:!0,destroyed:!1,styleQueue:[],prefixed:e.prefixed,threeD:e.csstransforms3d},t.fn.shuffle=function(e){var i=Array.prototype.slice.call(arguments,1)
+return this.each(function(){var n=t(this),r=n.data("shuffle")
+r||(r=new s(n,e),n.data("shuffle",r)),"string"==typeof e&&r[e]&&r[e].apply(r,i)})}}(jQuery,Modernizr)
 
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _getNumber = __webpack_require__(9);
-	
-	var _getNumber2 = _interopRequireDefault(_getNumber);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Represents a coordinate pair.
-	 * @param {number} [x=0] X.
-	 * @param {number} [y=0] Y.
-	 */
-	var Point = function Point(x, y) {
-	  this.x = (0, _getNumber2.default)(x);
-	  this.y = (0, _getNumber2.default)(y);
-	};
-	
-	/**
-	 * Whether two points are equal.
-	 * @param {Point} a Point A.
-	 * @param {Point} b Point B.
-	 * @return {boolean}
-	 */
-	Point.equals = function (a, b) {
-	  return a.x === b.x && a.y === b.y;
-	};
-	
-	exports.default = Point;
-
-/***/ },
-/* 9 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	/**
-	 * Always returns a numeric value, given a value. Logic from jQuery's `isNumeric`.
-	 * @param {*} value Possibly numeric value.
-	 * @return {number} `value` or zero if `value` isn't numeric.
-	 */
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = getNumber;
-	function getNumber(value) {
-	  return parseFloat(value) || 0;
-	}
-
-/***/ },
-/* 10 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-	
-	var _point = __webpack_require__(8);
-	
-	var _point2 = _interopRequireDefault(_point);
-	
-	var _classes = __webpack_require__(11);
-	
-	var _classes2 = _interopRequireDefault(_classes);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-	
-	var id = 0;
-	
-	var ShuffleItem = function () {
-	  function ShuffleItem(element) {
-	    _classCallCheck(this, ShuffleItem);
-	
-	    this.id = id++;
-	    this.element = element;
-	    this.isVisible = true;
-	  }
-	
-	  _createClass(ShuffleItem, [{
-	    key: 'show',
-	    value: function show() {
-	      this.isVisible = true;
-	      this.element.classList.remove(_classes2.default.HIDDEN);
-	      this.element.classList.add(_classes2.default.VISIBLE);
-	    }
-	  }, {
-	    key: 'hide',
-	    value: function hide() {
-	      this.isVisible = false;
-	      this.element.classList.remove(_classes2.default.VISIBLE);
-	      this.element.classList.add(_classes2.default.HIDDEN);
-	    }
-	  }, {
-	    key: 'init',
-	    value: function init() {
-	      this.addClasses([_classes2.default.SHUFFLE_ITEM, _classes2.default.VISIBLE]);
-	      this.applyCss(ShuffleItem.Css.INITIAL);
-	      this.scale = ShuffleItem.Scale.VISIBLE;
-	      this.point = new _point2.default();
-	    }
-	  }, {
-	    key: 'addClasses',
-	    value: function addClasses(classes) {
-	      var _this = this;
-	
-	      classes.forEach(function (className) {
-	        _this.element.classList.add(className);
-	      });
-	    }
-	  }, {
-	    key: 'removeClasses',
-	    value: function removeClasses(classes) {
-	      var _this2 = this;
-	
-	      classes.forEach(function (className) {
-	        _this2.element.classList.remove(className);
-	      });
-	    }
-	  }, {
-	    key: 'applyCss',
-	    value: function applyCss(obj) {
-	      for (var key in obj) {
-	        this.element.style[key] = obj[key];
-	      }
-	    }
-	  }, {
-	    key: 'dispose',
-	    value: function dispose() {
-	      this.removeClasses([_classes2.default.HIDDEN, _classes2.default.VISIBLE, _classes2.default.SHUFFLE_ITEM]);
-	
-	      this.element.removeAttribute('style');
-	      this.element = null;
-	    }
-	  }]);
-	
-	  return ShuffleItem;
-	}();
-	
-	ShuffleItem.Css = {
-	  INITIAL: {
-	    position: 'absolute',
-	    top: 0,
-	    left: 0,
-	    visibility: 'visible',
-	    'will-change': 'transform'
-	  },
-	  VISIBLE: {
-	    before: {
-	      opacity: 1,
-	      visibility: 'visible'
-	    },
-	    after: {}
-	  },
-	  HIDDEN: {
-	    before: {
-	      opacity: 0
-	    },
-	    after: {
-	      visibility: 'hidden'
-	    }
-	  }
-	};
-	
-	ShuffleItem.Scale = {
-	  VISIBLE: 1,
-	  HIDDEN: 0.001
-	};
-	
-	exports.default = ShuffleItem;
-
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = {
-	  BASE: 'shuffle',
-	  SHUFFLE_ITEM: 'shuffle-item',
-	  VISIBLE: 'shuffle-item--visible',
-	  HIDDEN: 'shuffle-item--hidden'
-	};
-
-/***/ },
-/* 12 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = getNumberStyle;
-	
-	var _getNumber = __webpack_require__(9);
-	
-	var _getNumber2 = _interopRequireDefault(_getNumber);
-	
-	var _computedSize = __webpack_require__(13);
-	
-	var _computedSize2 = _interopRequireDefault(_computedSize);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	/**
-	 * Retrieve the computed style for an element, parsed as a float.
-	 * @param {Element} element Element to get style for.
-	 * @param {string} style Style property.
-	 * @param {CSSStyleDeclaration} [styles] Optionally include clean styles to
-	 *     use instead of asking for them again.
-	 * @return {number} The parsed computed value or zero if that fails because IE
-	 *     will return 'auto' when the element doesn't have margins instead of
-	 *     the computed style.
-	 */
-	function getNumberStyle(element, style) {
-	  var styles = arguments.length <= 2 || arguments[2] === undefined ? window.getComputedStyle(element, null) : arguments[2];
-	
-	  var value = (0, _getNumber2.default)(styles[style]);
-	
-	  // Support IE<=11 and W3C spec.
-	  if (!_computedSize2.default && style === 'width') {
-	    value += (0, _getNumber2.default)(styles.paddingLeft) + (0, _getNumber2.default)(styles.paddingRight) + (0, _getNumber2.default)(styles.borderLeftWidth) + (0, _getNumber2.default)(styles.borderRightWidth);
-	  } else if (!_computedSize2.default && style === 'height') {
-	    value += (0, _getNumber2.default)(styles.paddingTop) + (0, _getNumber2.default)(styles.paddingBottom) + (0, _getNumber2.default)(styles.borderTopWidth) + (0, _getNumber2.default)(styles.borderBottomWidth);
-	  }
-	
-	  return value;
-	}
-
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	
-	var element = document.body || document.documentElement;
-	var e = document.createElement('div');
-	e.style.cssText = 'width:10px;padding:2px;box-sizing:border-box;';
-	element.appendChild(e);
-	
-	var width = window.getComputedStyle(e, null).width;
-	var ret = width === '10px';
-	
-	element.removeChild(e);
-	
-	exports.default = ret;
-
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.default = sorter;
-	
-	var _xtend = __webpack_require__(5);
-	
-	var _xtend2 = _interopRequireDefault(_xtend);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	// http://stackoverflow.com/a/962890/373422
-	function randomize(array) {
-	  var tmp;
-	  var current;
-	  var top = array.length;
-	
-	  if (!top) {
-	    return array;
-	  }
-	
-	  while (--top) {
-	    current = Math.floor(Math.random() * (top + 1));
-	    tmp = array[current];
-	    array[current] = array[top];
-	    array[top] = tmp;
-	  }
-	
-	  return array;
-	}
-	
-	var defaults = {
-	  // Use array.reverse() to reverse the results
-	  reverse: false,
-	
-	  // Sorting function
-	  by: null,
-	
-	  // If true, this will skip the sorting and return a randomized order in the array
-	  randomize: false,
-	
-	  // Determines which property of each item in the array is passed to the
-	  // sorting method.
-	  key: 'element'
-	};
-	
-	// You can return `undefined` from the `by` function to revert to DOM order.
-	function sorter(arr, options) {
-	  var opts = (0, _xtend2.default)(defaults, options);
-	  var original = [].slice.call(arr);
-	  var revert = false;
-	
-	  if (!arr.length) {
-	    return [];
-	  }
-	
-	  if (opts.randomize) {
-	    return randomize(arr);
-	  }
-	
-	  // Sort the elements by the opts.by function.
-	  // If we don't have opts.by, default to DOM order
-	  if (typeof opts.by === 'function') {
-	    arr.sort(function (a, b) {
-	
-	      // Exit early if we already know we want to revert
-	      if (revert) {
-	        return 0;
-	      }
-	
-	      var valA = opts.by(a[opts.key]);
-	      var valB = opts.by(b[opts.key]);
-	
-	      // If both values are undefined, use the DOM order
-	      if (valA === undefined && valB === undefined) {
-	        revert = true;
-	        return 0;
-	      }
-	
-	      if (valA < valB || valA === 'sortFirst' || valB === 'sortLast') {
-	        return -1;
-	      }
-	
-	      if (valA > valB || valA === 'sortLast' || valB === 'sortFirst') {
-	        return 1;
-	      }
-	
-	      return 0;
-	    });
-	  }
-	
-	  // Revert to the original array if necessary
-	  if (revert) {
-	    return original;
-	  }
-	
-	  if (opts.reverse) {
-	    arr.reverse();
-	  }
-	
-	  return arr;
-	}
-
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.onTransitionEnd = onTransitionEnd;
-	exports.cancelTransitionEnd = cancelTransitionEnd;
-	var transitions = {};
-	var eventName = 'transitionend';
-	var count = 0;
-	
-	function uniqueId() {
-	  return eventName + count++;
-	}
-	
-	function onTransitionEnd(element, callback) {
-	  var id = uniqueId();
-	  var listener = function listener(evt) {
-	    if (evt.currentTarget === evt.target) {
-	      cancelTransitionEnd(id);
-	      callback(evt);
-	    }
-	  };
-	
-	  element.addEventListener(eventName, listener);
-	
-	  transitions[id] = { element: element, listener: listener };
-	
-	  return id;
-	}
-	
-	function cancelTransitionEnd(id) {
-	  if (transitions[id]) {
-	    transitions[id].element.removeEventListener(eventName, transitions[id].listener);
-	    transitions[id] = null;
-	    return true;
-	  }
-	
-	  return false;
-	}
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.getItemPosition = getItemPosition;
-	exports.getColumnSpan = getColumnSpan;
-	exports.getAvailablePositions = getAvailablePositions;
-	exports.getShortColumn = getShortColumn;
-	
-	var _point = __webpack_require__(8);
-	
-	var _point2 = _interopRequireDefault(_point);
-	
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-	
-	function arrayMax(array) {
-	  return Math.max.apply(Math, array);
-	}
-	
-	function arrayMin(array) {
-	  return Math.min.apply(Math, array);
-	}
-	
-	/**
-	 * Determine the location of the next item, based on its size.
-	 * @param {Object} itemSize Object with width and height.
-	 * @param {Array.<number>} positions Positions of the other current items.
-	 * @param {number} gridSize The column width or row height.
-	 * @param {number} total The total number of columns or rows.
-	 * @param {number} threshold Buffer value for the column to fit.
-	 * @param {number} buffer Vertical buffer for the height of items.
-	 * @return {Point}
-	 */
-	function getItemPosition(_ref) {
-	  var itemSize = _ref.itemSize;
-	  var positions = _ref.positions;
-	  var gridSize = _ref.gridSize;
-	  var total = _ref.total;
-	  var threshold = _ref.threshold;
-	  var buffer = _ref.buffer;
-	
-	  var span = getColumnSpan(itemSize.width, gridSize, total, threshold);
-	  var setY = getAvailablePositions(positions, span, total);
-	  var shortColumnIndex = getShortColumn(setY, buffer);
-	
-	  // Position the item
-	  var point = new _point2.default(Math.round(gridSize * shortColumnIndex), Math.round(setY[shortColumnIndex]));
-	
-	  // Update the columns array with the new values for each column.
-	  // e.g. before the update the columns could be [250, 0, 0, 0] for an item
-	  // which spans 2 columns. After it would be [250, itemHeight, itemHeight, 0].
-	  var setHeight = setY[shortColumnIndex] + itemSize.height;
-	  for (var i = 0; i < span; i++) {
-	    positions[shortColumnIndex + i] = setHeight;
-	  }
-	
-	  return point;
-	}
-	
-	/**
-	 * Determine the number of columns an items spans.
-	 * @param {number} itemWidth Width of the item.
-	 * @param {number} columnWidth Width of the column (includes gutter).
-	 * @param {number} columns Total number of columns
-	 * @param {number} threshold A buffer value for the size of the column to fit.
-	 * @return {number}
-	 */
-	function getColumnSpan(itemWidth, columnWidth, columns, threshold) {
-	  var columnSpan = itemWidth / columnWidth;
-	
-	  // If the difference between the rounded column span number and the
-	  // calculated column span number is really small, round the number to
-	  // make it fit.
-	  if (Math.abs(Math.round(columnSpan) - columnSpan) < threshold) {
-	    // e.g. columnSpan = 4.0089945390298745
-	    columnSpan = Math.round(columnSpan);
-	  }
-	
-	  // Ensure the column span is not more than the amount of columns in the whole layout.
-	  return Math.min(Math.ceil(columnSpan), columns);
-	}
-	
-	/**
-	 * Retrieves the column set to use for placement.
-	 * @param {number} columnSpan The number of columns this current item spans.
-	 * @param {number} columns The total columns in the grid.
-	 * @return {Array.<number>} An array of numbers represeting the column set.
-	 */
-	function getAvailablePositions(positions, columnSpan, columns) {
-	  // The item spans only one column.
-	  if (columnSpan === 1) {
-	    return positions;
-	  }
-	
-	  // The item spans more than one column, figure out how many different
-	  // places it could fit horizontally.
-	  // The group count is the number of places within the positions this block
-	  // could fit, ignoring the current positions of items.
-	  // Imagine a 2 column brick as the second item in a 4 column grid with
-	  // 10px height each. Find the places it would fit:
-	  // [20, 10, 10, 0]
-	  //  |   |   |
-	  //  *   *   *
-	  //
-	  // Then take the places which fit and get the bigger of the two:
-	  // max([20, 10]), max([10, 10]), max([10, 0]) = [20, 10, 0]
-	  //
-	  // Next, find the first smallest number (the short column).
-	  // [20, 10, 0]
-	  //          |
-	  //          *
-	  //
-	  // And that's where it should be placed!
-	  //
-	  // Another example where the second column's item extends past the first:
-	  // [10, 20, 10, 0] => [20, 20, 10] => 10
-	  var available = [];
-	
-	  // For how many possible positions for this item there are.
-	  for (var i = 0; i <= columns - columnSpan; i++) {
-	    // Find the bigger value for each place it could fit.
-	    available.push(arrayMax(positions.slice(i, i + columnSpan)));
-	  }
-	
-	  return available;
-	}
-	
-	/**
-	 * Find index of short column, the first from the left where this item will go.
-	 *
-	 * @param {Array.<number>} positions The array to search for the smallest number.
-	 * @param {number} buffer Optional buffer which is very useful when the height
-	 *     is a percentage of the width.
-	 * @return {number} Index of the short column.
-	 */
-	function getShortColumn(positions, buffer) {
-	  var minPosition = arrayMin(positions);
-	  for (var i = 0, len = positions.length; i < len; i++) {
-	    if (positions[i] >= minPosition - buffer && positions[i] <= minPosition + buffer) {
-	      return i;
-	    }
-	  }
-	
-	  return 0;
-	}
-
-/***/ }
-/******/ ])
-});
-;
-//# sourceMappingURL=shuffle.js.map
 $(document).ready(function(){
+
+	var lastScrollTop = 0;
+	var ratio = 0;
+
+	if($(window).width() > 750){
+		ratio = 0.65;
+	}else{
+		ratio = 1.15;
+	}
+
+	$('.skill').css('width', '0');
+
+	function loadProgressBar(){
+		$('.skill').each(function(i){
+			setTimeout(function(){
+				var level = $('.skill').eq(i).data("size");
+				$('.skill').eq(i).animate({width: level}, {duration: 1000, easing: 'swing'});
+			},i*250);
+		});
+	}
 
 	$('#header-icon').click(function(e){
 		e.preventDefault();
@@ -2261,23 +355,24 @@ $(document).ready(function(){
 		$('nav').removeClass('sidebar');
 	});
 
-	// $('a[href^="#"]').click(function(e){
-  //
-  //   var target = $(this).attr('href');
-  //   var strip = target.slice(1);
-  //                                 //var hjh = $(this.hash);
-  //   var anchor = $("section[id='" + strip + "']");
-  //
-  //   e.preventDefault(); //zapobiega przeładowaniu
-  //
-  //   $('html, body').animate({
-  //
-  //     scrollTop: anchor.offset().top - $('header').height()*1.3
-  //
-  //   }, 'slow');
-  //
-  // });
+	$('a[href^="#"]').click(function(e){
 
+    var target = $(this).attr('href');
+    var strip = target.slice(1);
+
+    var anchor = $("section[id='" + strip + "']");
+
+    e.preventDefault(); //zapobiega przeładowaniu
+
+    $('html, body').animate({
+
+      scrollTop: anchor.offset().top - 50
+
+    }, 1500);
+
+  });
+
+	//slick slider
 	$('.slider').slick({
 		infinite: true,
   	slidesToShow: 3,
@@ -2285,24 +380,58 @@ $(document).ready(function(){
 		speed: 500,
 		dots: true,
 		autoplay: true,
-  	autoplaySpeed: 6000
+  	autoplaySpeed: 4000,
+		responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2
+      }
+    },
+    {
+      breakpoint: 750,
+      settings: {
+        slidesToShow: 1,
+				dots: false
+      }
+    }
+  ]
   });
 
-	/* initialize shuffle plugin */
-  var $grid = $('#grid');
-  $grid.shuffle({
-    itemSelector: '.item' // the selector for the items in the grid
+
+	// init Isotope
+  var $grid = $('.grid').isotope({
+    itemSelector: '.element-item',
+    //layoutMode: 'fitRows',
+		masonry: {
+      columnWidth: 256,
+      isFitWidth: true
+    }
   });
-  /* reshuffle when user clicks a filter item */
-  $('#filter a').click(function (e) {
-    e.preventDefault();
-    // set active class
-    $('#filter a').removeClass('active');
-    $(this).addClass('active');
-    // get group name from clicked item
-    var groupName = $(this).attr('data-group');
-    // reshuffle grid
-    $grid.shuffle('shuffle', groupName );
+  // bind filter button click
+  $('.filters-button-group .button').on( 'click', function() {
+    var filterValue = $( this ).attr('data-filter');
+    $grid.isotope({ filter: filterValue });
   });
-	
+
+	new WOW().init();
+
+		$(window).scroll(function(event){
+			if($(window).scrollTop() > $('.progress-bars').offset().top-$(window).height()*ratio){
+				loadProgressBar();
+			}
+			//footer
+			var footerHeight = $('footer').outerHeight();
+			//console.log(footerHeight);
+			$('.content').css('margin-bottom', footerHeight);
+
+			var st = $(this).scrollTop();
+			if (st > lastScrollTop){
+					$('header').css('position', 'absolute');
+			} else {
+				 $('header').css('position', 'fixed');
+			}
+			lastScrollTop = st;
+
+		});
 });

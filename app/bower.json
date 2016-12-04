@@ -19,6 +19,8 @@
     "skeleton": "^2.0.4",
     "font-awesome": "^4.7.0",
     "slick-carousel": "slick.js#^1.6.0",
-    "shufflejs": "^4.0.2"
+    "isotope": "^3.0.1",
+    "animate.css": "^3.5.2",
+    "wow": "wow.js#^1.1.2"
   }
 }

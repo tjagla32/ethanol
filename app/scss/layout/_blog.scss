@@ -1,0 +1,92 @@
+.blog{
+  margin: 100px 0;
+  .blog-content{
+    background-color: $color-section;
+    padding: 50px 0;
+    .blog-container{
+      width: 100%;
+    }
+    .flex-box{
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      .blog-shortcut{
+        width: 556px;
+        max-width: 96%;
+        background-color: #fff;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+        margin-bottom: 20px;
+        border-radius: 5px;
+        color: $color-panel;
+        &:nth-child(odd){
+          margin-right: 20px;
+        }
+        .blog-body{
+          padding: 20px;
+          img{
+            float: left;
+            margin: 0 20px 10px 0;
+          }
+          .date{
+            font-size: 12px;
+            font-family: 'Lato';
+            font-weight: bold;
+          }
+          .blog-title{
+            font-family: 'Lato-Bold';
+            font-size: 16px;
+            margin-bottom: 5px;
+          }
+          .blog-text{
+            margin-bottom: 0;
+          }
+        }
+        .blog-footer{
+          overflow: hidden;
+          padding: 5px 20px;
+          border-top: 1px solid #ddd;
+          .blog-breadcrumbs{
+            float: left;
+            a{
+              text-decoration: none;
+              color: $color-primary;
+              &:after{
+                content: " / ";
+                color: $color-description;
+              }
+              &:last-child{
+                &:after{
+                  content: "";
+                }
+              }
+            }
+          }
+          .blog-loves{
+            float: right;
+            background-color: $color-section;
+            padding: 2px 5px;
+            @include mprefix(border-radius, 5px);
+            i{
+              color: red;
+              margin-right: 10px;
+            }
+          }
+        }
+      }
+    }
+    .text-center{
+      .button{
+        border-color: $color-primary;
+        background-color: $color-primary;
+        color: #fff;
+        transition: all .1s ease-in-out;
+        &:hover{
+          background-color: $color-section;
+          color: $color-primary;
+        }
+      }
+      margin-top: 30px;
+    }
+  }
+}

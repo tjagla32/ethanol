@@ -1,5 +1,25 @@
 $(document).ready(function(){
 
+	var lastScrollTop = 0;
+	var ratio = 0;
+
+	if($(window).width() > 750){
+		ratio = 0.65;
+	}else{
+		ratio = 1.15;
+	}
+
+	$('.skill').css('width', '0');
+
+	function loadProgressBar(){
+		$('.skill').each(function(i){
+			setTimeout(function(){
+				var level = $('.skill').eq(i).data("size");
+				$('.skill').eq(i).animate({width: level}, {duration: 1000, easing: 'swing'});
+			},i*250);
+		});
+	}
+
 	$('#header-icon').click(function(e){
 		e.preventDefault();
 		$('nav').toggleClass('sidebar');
@@ -8,23 +28,24 @@ $(document).ready(function(){
 		$('nav').removeClass('sidebar');
 	});
 
-	// $('a[href^="#"]').click(function(e){
-  //
-  //   var target = $(this).attr('href');
-  //   var strip = target.slice(1);
-  //                                 //var hjh = $(this.hash);
-  //   var anchor = $("section[id='" + strip + "']");
-  //
-  //   e.preventDefault(); //zapobiega przeładowaniu
-  //
-  //   $('html, body').animate({
-  //
-  //     scrollTop: anchor.offset().top - $('header').height()*1.3
-  //
-  //   }, 'slow');
-  //
-  // });
+	$('a[href^="#"]').click(function(e){
 
+    var target = $(this).attr('href');
+    var strip = target.slice(1);
+
+    var anchor = $("section[id='" + strip + "']");
+
+    e.preventDefault(); //zapobiega przeładowaniu
+
+    $('html, body').animate({
+
+      scrollTop: anchor.offset().top - 50
+
+    }, 1500);
+
+  });
+
+	//slick slider
 	$('.slider').slick({
 		infinite: true,
   	slidesToShow: 3,
@@ -32,24 +53,58 @@ $(document).ready(function(){
 		speed: 500,
 		dots: true,
 		autoplay: true,
-  	autoplaySpeed: 6000
+  	autoplaySpeed: 4000,
+		responsive: [
+    {
+      breakpoint: 1024,
+      settings: {
+        slidesToShow: 2
+      }
+    },
+    {
+      breakpoint: 750,
+      settings: {
+        slidesToShow: 1,
+				dots: false
+      }
+    }
+  ]
   });
 
-	/* initialize shuffle plugin */
-  var $grid = $('#grid');
-  $grid.shuffle({
-    itemSelector: '.item' // the selector for the items in the grid
+
+	// init Isotope
+  var $grid = $('.grid').isotope({
+    itemSelector: '.element-item',
+    //layoutMode: 'fitRows',
+		masonry: {
+      columnWidth: 256,
+      isFitWidth: true
+    }
   });
-  /* reshuffle when user clicks a filter item */
-  $('#filter a').click(function (e) {
-    e.preventDefault();
-    // set active class
-    $('#filter a').removeClass('active');
-    $(this).addClass('active');
-    // get group name from clicked item
-    var groupName = $(this).attr('data-group');
-    // reshuffle grid
-    $grid.shuffle('shuffle', groupName );
+  // bind filter button click
+  $('.filters-button-group .button').on( 'click', function() {
+    var filterValue = $( this ).attr('data-filter');
+    $grid.isotope({ filter: filterValue });
   });
-	
+
+	new WOW().init();
+
+		$(window).scroll(function(event){
+			if($(window).scrollTop() > $('.progress-bars').offset().top-$(window).height()*ratio){
+				loadProgressBar();
+			}
+			//footer
+			var footerHeight = $('footer').outerHeight();
+			//console.log(footerHeight);
+			$('.content').css('margin-bottom', footerHeight);
+
+			var st = $(this).scrollTop();
+			if (st > lastScrollTop){
+					$('header').css('position', 'absolute');
+			} else {
+				 $('header').css('position', 'fixed');
+			}
+			lastScrollTop = st;
+
+		});
 });

@@ -11,7 +11,8 @@ gulp.task('scripts', function(){
   gulp.src(['app/bower_components/jquery/dist/jquery.min.js',
             '//code.jquery.com/jquery-migrate-1.2.1.min.js',/*---slick slider---*/
             'app/bower_components/slick-carousel/slick/slick.min.js',
-            'app/bower_components/shufflejs/dist/shuffle.js',
+            'app/bower_components/isotope/dist/isotope.pkgd.min.js',
+            'app/bower_components/wow/dist/wow.min.js',
             'app/js/**/*.js',
             '!app/js/**/main*'])
   .pipe(concat('main.js'))
@@ -26,6 +27,7 @@ gulp.task('style', function(){
             'app/bower_components/font-awesome/scss/font-awesome.scss',
             'app/bower_components/slick-carousel/slick/slick.css',
             'app/bower_components/slick-carousel/slick/slick-theme.css',
+            'app/bower_components/animate.css/animate.min.css',
             'app/scss/**/*.scss'])
   .pipe(sass().on('error', sass.logError))
   .pipe(concatCss('style.css'))

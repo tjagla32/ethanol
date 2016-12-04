@@ -1,0 +1,35 @@
+.team{
+  margin-bottom: 150px;
+  .team-member{
+    text-align: center;
+    margin-left: 5px;
+    img{
+      margin: 0 auto;
+    }
+    .description{
+      .name{
+        font-weight: bold;
+        font-size: 30px;
+        color: #000;
+        display: block;
+      }
+      .position{
+        color: $color-description;
+      }
+      .social-media{
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        .icon{
+          padding: 5px;
+          background: $color-primary;
+          float: left;
+          margin-right: 5px;
+          &:last-child{
+            margin-right: 0;
+          }
+        }
+      }
+    }
+  }
+}

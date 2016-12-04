@@ -1,0 +1,41 @@
+@mixin mbackground($image: none, $position: 0% 0%, $size: auto auto,
+                  $repeat: repeat, $attachment: scroll, $color: transparent){
+  background-image: $image;
+  background-position: $position;
+  background-size: $size;
+  background-repeat: $repeat;
+  background-attachment: $attachment;
+  background-color: $color;
+}
+///////////////////////////////////////
+@mixin mprefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
+//////////////////////////////////////
+@mixin mtransition($time: 0.3s, $delay: 0.05s){
+  @include mprefix(transition, all $time ease-in-out $delay);
+}
+/////////////////////////////////////
+@mixin moverlay(){
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+/////////////////////////////////////
+@mixin setX($left: 50%){
+  position: absolute;
+  left: $left;
+  @include mprefix(transform, translateX(-50%));
+}
+////////////////////////////////////
+@mixin setY($top: 50%){
+  position: absolute;
+  top: $top;
+  @include mprefix(transform, translateY(-50%));
+}

@@ -1,0 +1,46 @@
+.process{
+  margin: 200px 0;
+  overflow: hidden;
+  .icons-list{
+    background-color: $color-section;
+    padding: 100px 0 60px;
+    position: relative;
+    .line{
+      position: absolute;
+      top: -100px;
+      bottom: -100px;
+      width: 5px;
+      background-color: #fff;
+      left: 58px;
+      z-index: 98;
+    }
+    .icon-one{
+      .icon{
+        background-color: $color-primary;
+        border: 4px solid #fff;
+        border-radius: 5px 50% 50% 50%;
+        box-sizing: border-box;
+        min-width: 120px;
+        max-width: 120px;
+        min-height: 120px;
+        max-height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        margin-right: 40px;
+        margin-bottom: 80px;
+        position: relative;
+        z-index: 99;
+      }
+      .text{
+        position: relative;
+        top: 20px;
+        span{
+          font-weight: bold;
+          text-transform: uppercase;
+        }
+      }
+    }
+  }
+}

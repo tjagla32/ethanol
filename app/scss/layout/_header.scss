@@ -1,7 +1,8 @@
 ///////////////////////////////
-$bg-menu: pink;
+$bg-menu: #fff;
+$bg-responsive: lighten($color-primary, 20%);
 $color-menu: #333;
-$height-menu: 125px;
+$height-menu: 100px;
 $color-hamburger: #666;
 $break-point: 767px;
 $sidebar-width: 75%;
@@ -28,6 +29,12 @@ header{
   //height: $height-menu;
   background-color: $bg-menu;
   height: $height-menu;
+  z-index: 99;
+
+  transition: all .2s ease-in-out;
+  -webkit-box-shadow: 0px 0px 63px -4px rgba(0,0,0,0.8);
+  -moz-box-shadow: 0px 0px 63px -4px rgba(0,0,0,0.8);
+  box-shadow: 0px 0px 63px -4px rgba(0,0,0,0.8);
   a{
     color: $color-menu;
     text-decoration: none;
@@ -118,7 +125,7 @@ header{
 }
 @media screen and (max-width: $break-point){
   nav{
-    background-color: rgba(66,10,255, .75);
+    background-color: rgba($bg-responsive, 0.75);
     position: absolute;
     width: $sidebar-width;
     height: 2000%;
@@ -130,6 +137,7 @@ header{
     z-index: 998;
     a{
       font-size: 36px;
+      font-family: 'Lato';
       &:first-child{
         margin-top: 100px;
       }

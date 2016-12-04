@@ -1,0 +1,38 @@
+.focus{
+  padding: 100px 0;
+  color: $color-description;
+  &-content{
+    margin-bottom: 50px;
+    .column{
+      display: flex;
+      &:nth-child(odd){
+        text-align: right;
+        .icon{
+          margin-left: 25px;
+        }
+      }
+      &:nth-child(even){
+        .icon{
+          margin-right: 25px;
+        }
+      }
+    }
+    span{
+      font-family: 'Lato';
+      font-weight: bold;
+    }
+    .icon{
+      background-color: $color-primary;
+      border-radius: 10px 50% 50% 50%;
+      position: relative;
+      min-width: $size-icon;
+      max-width: $size-icon;
+      min-height: $size-icon;
+      max-height: $size-icon;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+}

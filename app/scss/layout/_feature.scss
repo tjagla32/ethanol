@@ -1,0 +1,67 @@
+.feature{
+  margin-bottom: 150px;
+  .row:not(:first-child){
+    background-color: $color-section;
+    padding: 100px 0;
+  }
+  .buttons{
+    box-sizing: border-box;
+    padding-right: 50px;
+    .btn{
+      display: flex;
+      background-color: #fff;
+      border-radius: 5px;
+      width: 100%;
+      max-width: 320px;
+      padding: 20px;
+      box-sizing: border-box;
+      margin-bottom: 30px;
+      align-items: center;
+      border-bottom: 2px solid #ccc;
+      @include mtransition($delay: 0s);
+      &:hover{
+        background-color: $color-primary;
+        border-bottom: 2px solid #996600;
+        i{
+          color: #fff;
+        }
+        span:first-child, span:last-child{
+          color: #fff;
+        }
+      }
+      i{
+        margin-right: 20px;
+        color: #333;
+      }
+      span:first-child{
+        text-transform: uppercase;
+        font-weight: bold;
+        font-family: 'Lato';
+        color: #666;
+        display: block;
+      }
+      span:last-child{
+        font-family: 'Lato-LightItalic';
+        color: $color-description;
+      }
+    }
+  }
+  .device{
+    //background-color: pink;
+    .uppercase{
+      font-family: 'Lato';
+      font-size: 30px;
+      margin-bottom: 30px;
+      display: block;
+    }
+    p{
+      color: $color-description;
+      font-family: 'Lato';
+      font-size: 16px;
+    }
+    img{
+      content: url('../images/desktop.png');
+      margin: 50px auto 0;
+    }
+  }
+}
