@@ -5,7 +5,8 @@ footer{
   position: fixed;
   bottom: 0;
   width: 100%;
-  z-index: -1;
+  z-index: 1;
+  overflow-x: hidden;
 
   .container{
     width: 90%;
@@ -25,5 +26,20 @@ footer{
     margin: 0;
     font-size: 20px;
     font-family: 'Lato';
+  }
+
+  .back-top{
+    color: #fff;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    //animation: bounce 2s infinite;
+    @include mprefix(animation, bounce 2s infinite)
+    a{
+      text-decoration: none;
+      i{
+        color: #fff;
+      }
+    }
   }
 }

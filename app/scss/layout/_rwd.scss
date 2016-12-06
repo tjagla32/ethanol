@@ -115,6 +115,11 @@
 #####################################################
 ####################################################*/
 @media (max-width: 750px) {
+  .home{
+    .see-more{
+      display: none;
+    }
+  }
   .focus{
     .focus-content{
       margin-bottom: 0;
@@ -210,6 +215,7 @@
       }
     }
     .see-more{
+      display: none;
       top: 70%;
       .underline{
         font-size: 18px;
@@ -321,6 +327,15 @@
 #####################################################
 ####################################################*/
 @media only screen and (max-width: 449px){
+  .work{
+    .button-group{
+      button{
+        display: block;
+        width: 90px;
+        margin: 0 auto 20px;
+      }
+    }
+  }
   .blog{
     .blog-content{
       .flex-box{

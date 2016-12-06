@@ -87,8 +87,6 @@ $(document).ready(function(){
     $grid.isotope({ filter: filterValue });
   });
 
-	new WOW().init();
-
 		$(window).scroll(function(event){
 			if($(window).scrollTop() > $('.progress-bars').offset().top-$(window).height()*ratio){
 				loadProgressBar();
@@ -97,14 +95,6 @@ $(document).ready(function(){
 			var footerHeight = $('footer').outerHeight();
 			//console.log(footerHeight);
 			$('.content').css('margin-bottom', footerHeight);
-
-			var st = $(this).scrollTop();
-			if (st > lastScrollTop){
-					$('header').css('position', 'absolute');
-			} else {
-				 $('header').css('position', 'fixed');
-			}
-			lastScrollTop = st;
 
 		});
 });
