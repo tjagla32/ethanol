@@ -19,6 +19,23 @@
 #####################################################
 #####################################################
 ####################################################*/
+@media (max-width: 1099px) {
+  footer{
+    .footer-content{
+      flex-direction: column;
+      .column{
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        text-align: center;
+        &:first-child{
+          margin-bottom: 30px;
+        }
+      }
+    }
+  }
+}
 @media (max-width: 999px) {
   .feature{
     .feature-content{
@@ -46,22 +63,6 @@
       .icon-one{
         .text{
           top: 5px;
-        }
-      }
-    }
-  }
-  /////////////////////////////////
-  footer{
-    .footer-content{
-      flex-direction: column;
-      .column{
-        margin: 0 auto;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        text-align: center;
-        &:first-child{
-          margin-bottom: 30px;
         }
       }
     }
@@ -349,6 +350,11 @@
           }
         }
       }
+    }
+  }
+  footer{
+    .footer-content{
+      margin-bottom: 50px;
     }
   }
 }

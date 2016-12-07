@@ -5089,6 +5089,24 @@ footer .back-top a i {
 #####################################################
 ####################################################*/
 
+@media (max-width: 1099px) {
+  footer .footer-content {
+    flex-direction: column;
+  }
+
+  footer .footer-content .column {
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+  }
+
+  footer .footer-content .column:first-child {
+    margin-bottom: 30px;
+  }
+}
+
 @media (max-width: 999px) {
   .feature .feature-content .one-half {
     width: 100%;
@@ -5110,22 +5128,6 @@ footer .back-top a i {
 
   .process .icons-list .icon-one .text {
     top: 5px;
-  }
-
-  footer .footer-content {
-    flex-direction: column;
-  }
-
-  footer .footer-content .column {
-    margin: 0 auto;
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    text-align: center;
-  }
-
-  footer .footer-content .column:first-child {
-    margin-bottom: 30px;
   }
 }
 
@@ -5367,5 +5369,9 @@ footer .back-top a i {
     float: none;
     margin: 0 auto 20px;
     display: block;
+  }
+
+  footer .footer-content {
+    margin-bottom: 50px;
   }
 }
